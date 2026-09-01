@@ -275,6 +275,62 @@ function renderInboxList() {
   document.getElementById("inbox-unread-count").innerText = `${phishCount} Phish Detected`;
 }
 
+// ==================== EMAIL CALLER ID HELPERS ====================
+function parseSenderDetails(fromStr) {
+  let displayName = "";
+  let emailAddr = "";
+  let domain = "";
+
+  if (fromStr) {
+    const match = fromStr.match(/^(?:"?([^"<]+)"?\s*)?<([^>]+)>$/);
+    if (match) {
+      displayName = (match[1] || "").trim();
+      emailAddr = (match[2] || "").trim();
+    } else {
+      if (fromStr.includes("@")) {
+        displayName = fromStr.split("@")[0].trim();
+        emailAddr = fromStr.trim();
+      } else {
+        displayName = fromStr.trim();
+        emailAddr = "";
+      }
+    }
+    if (emailAddr.includes("@")) {
+      domain = emailAddr.split("@").pop().trim();
+    }
+  }
+  return {
+    displayName: displayName || "Unknown Sender",
+    emailAddr: emailAddr,
+    domain: domain
+  };
+}
+
+function extractImpersonatedBrand(mail) {
+  if (mail.sender_info && mail.sender_info.impersonated_brand) {
+    return mail.sender_info.impersonated_brand;
+  }
+  const fullText = `${mail.threat || ''} ${(mail.reasons || []).join(' ')} ${mail.from || ''}`.toLowerCase();
+  const knownBrands = [
+    "paypal", "microsoft", "apple", "amazon", "netflix", "chase", 
+    "bank of america", "wells fargo", "citibank", "docusign", "binance", 
+    "coinbase", "google", "meta", "instagram", "facebook", "whatsapp", 
+    "zoom", "slack", "dhl", "fedex", "usps", "ups", "spotify", "steam", "playstation"
+  ];
+  
+  for (const b of knownBrands) {
+    if (fullText.includes(b)) {
+      return b.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    }
+  }
+  return null;
+}
+
+function hasLookalikeWarning(mail) {
+  const fullText = `${mail.threat || ''} ${(mail.reasons || []).join(' ')}`.toLowerCase();
+  return fullText.includes("lookalike") || fullText.includes("typosquat") || fullText.includes("homoglyph") || fullText.includes("spoofing");
+}
+
 function selectEmail(id) {
   document.querySelectorAll(".inbox-item-row").forEach(r => {
     r.classList.toggle("active", r.dataset.id === id);
@@ -315,40 +371,138 @@ function selectEmail(id) {
     });
   });
 
-  // Inject PhishGuard Security Alert Banner
+  // Helper: Extract sender parts (Display Name, Email Address, Domain)
+  const senderInfo = parseSenderDetails(mail.from || "");
+  const impersonatedBrand = extractImpersonatedBrand(mail);
+  const lookalikeWarning = hasLookalikeWarning(mail);
+  const threatCount = (mail.threat_categories && mail.threat_categories.length) || 
+                      (mail.reasons && mail.reasons.length) || 
+                      (mail.isPhish ? 1 : 0);
+
+  // Determine Truecaller 3-State Visual Safety Indicator & Caller ID Status
+  let safetyState = "safe";
+  let safetyTag = "SAFE";
+  let safetyIcon = "🟢";
+  let safetySubtitle = "No major threats detected. The sender appears legitimate.";
+  let callerIdStatusText = "✓ SENDER APPEARS LEGITIMATE";
+
+  if (mail.isPhish || mail.score >= 45) {
+    safetyState = "scam";
+    safetyTag = "SCAM";
+    safetyIcon = "🔴";
+    safetySubtitle = "This email appears dangerous. Do not click links or share sensitive information.";
+    callerIdStatusText = "🚨 SPOOFED / HIGH RISK SENDER";
+  } else if (!mail.isPhish && mail.score >= 20 && mail.score < 45) {
+    safetyState = "suspicious";
+    safetyTag = "SUSPICIOUS";
+    safetyIcon = "🟡";
+    safetySubtitle = "This email has unusual characteristics. Verify the sender before taking action.";
+    callerIdStatusText = "⚠️ VERIFY SENDER";
+  }
+
+  // 1. Inject Truecaller Identity Badge & PhishGuard Threat Analysis Banner
   const bannerSlot = document.getElementById("email-view-banner-slot");
-  if (mail.isPhish) {
-    bannerSlot.innerHTML = `
-      <div class="phishguard-alert-banner">
-        <div class="banner-top-row">
-          <span class="banner-threat-title">
-            <span>🚨</span> PhishGuard Security Alert: ${mail.threat}
-          </span>
-          <span class="banner-risk-badge">${mail.score}/100 Risk Score</span>
+  bannerSlot.innerHTML = `
+    <!-- Top Truecaller-Style Identity Tag -->
+    <div class="truecaller-safety-card state-${safetyState}">
+      <div class="truecaller-header-row">
+        <div class="truecaller-badge">
+          <span>${safetyIcon}</span> ${safetyTag}
         </div>
-        <ul class="banner-reasons-list">
-          ${mail.reasons.map(r => `<li>${r}</li>`).join('')}
-        </ul>
+        <span class="truecaller-score-pill">
+          ${safetyState === 'safe' ? 'Verified Safe (0-19% Risk)' : `${mail.score}/100 Risk Score`}
+        </span>
+      </div>
+      <div class="truecaller-subtitle">
+        ${safetySubtitle}
+      </div>
+    </div>
+
+    <!-- Underlying Detailed Risk Analysis Card -->
+    <div class="phishguard-alert-banner ${safetyState === 'safe' ? 'safe-banner' : (safetyState === 'suspicious' ? 'suspicious-banner' : '')}">
+      <div class="banner-top-row">
+        <span class="banner-threat-title" style="${safetyState === 'suspicious' ? 'color:#f59e0b;' : ''}">
+          <span>${safetyIcon}</span> ${safetyState === 'safe' ? 'PhishGuard: Legitimate Verified Communication' : `PhishGuard Threat Analysis: ${mail.threat}`}
+        </span>
+        <span class="banner-risk-badge" style="${safetyState === 'suspicious' ? 'background:#f59e0b; color:#000;' : ''}">
+          ${mail.score}/100 Risk Score
+        </span>
+      </div>
+      <ul class="banner-reasons-list" style="${safetyState === 'suspicious' ? 'color:#fef08a;' : ''}">
+        ${mail.reasons.map(r => `<li>${safetyState === 'safe' ? '✓ ' : ''}${r}</li>`).join('')}
+      </ul>
+      ${safetyState === 'scam' ? `
         <div style="font-size:11px; color:#fca5a5; margin-top:6px; font-weight:700;">
           🛡️ DO NOT click any links, enter credentials, or open attachments.
         </div>
+      ` : (safetyState === 'suspicious' ? `
+        <div style="font-size:11px; color:#fef08a; margin-top:6px; font-weight:700;">
+          ⚠️ CAUTION: Inspect links and verify sender identity before replying.
+        </div>
+      ` : '')}
+    </div>
+  `;
+
+  // 2. Inject Compact Email Caller ID Card (between banner and body)
+  const callerIdSlot = document.getElementById("email-caller-id-slot");
+  if (callerIdSlot) {
+    callerIdSlot.innerHTML = `
+      <div class="caller-id-card state-${safetyState}">
+        <div class="caller-id-header">
+          <span class="caller-id-title">
+            <span>👤</span> EMAIL CALLER ID
+          </span>
+          <span class="caller-id-status-badge status-${safetyState}">
+            ${callerIdStatusText}
+          </span>
+        </div>
+
+        <div class="caller-id-main-row">
+          <div class="caller-id-avatar">
+            ${safetyState === 'safe' ? '🛡️' : (safetyState === 'suspicious' ? '⚠️' : '🚨')}
+          </div>
+          <div class="caller-id-details">
+            <div class="caller-id-name">${escapeHtml(senderInfo.displayName)}</div>
+            <div class="caller-id-email">${escapeHtml(senderInfo.emailAddr || mail.from)}</div>
+            <div class="caller-id-domain">
+              <span>🌐 Origin Domain: </span><strong style="color:#ffffff;">${escapeHtml(senderInfo.domain || 'Direct Domain / Unspecified')}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="caller-id-chips-row">
+          <span class="caller-chip ${threatCount > 0 ? 'chip-danger' : 'chip-safe'}">
+            ${threatCount > 0 ? `⚠️ ${threatCount} Threat${threatCount > 1 ? 's' : ''} Detected` : '🛡️ 0 Threats Detected'}
+          </span>
+          ${impersonatedBrand ? `
+            <span class="caller-chip chip-danger">
+              🏷️ Impersonating: <strong>${escapeHtml(impersonatedBrand)}</strong>
+            </span>
+          ` : ''}
+          ${lookalikeWarning ? `
+            <span class="caller-chip chip-warning">
+              ⚠️ Lookalike domain detected
+            </span>
+          ` : ''}
+          <span class="caller-chip">
+            📅 ${escapeHtml(mail.date || 'Just Now')}
+          </span>
+          ${mail.reply_to ? `
+            <span class="caller-chip chip-warning">
+              ↩️ Reply-To: ${escapeHtml(mail.reply_to)}
+            </span>
+          ` : ''}
+          <span class="caller-chip">
+            🔒 Protocol: PhishGuard Real-Time
+          </span>
+        </div>
       </div>
     `;
+  }
+
+  if (safetyState === "scam" || safetyState === "suspicious") {
     playAlertSound("danger");
   } else {
-    bannerSlot.innerHTML = `
-      <div class="phishguard-alert-banner safe-banner">
-        <div class="banner-top-row">
-          <span class="banner-threat-title">
-            <span>✅</span> PhishGuard: Legitimate Verified Communication
-          </span>
-          <span class="banner-risk-badge">Verified Safe (0% Risk)</span>
-        </div>
-        <ul class="banner-reasons-list">
-          ${mail.reasons.map(r => `<li>✓ ${r}</li>`).join('')}
-        </ul>
-      </div>
-    `;
     playAlertSound("safe");
   }
 

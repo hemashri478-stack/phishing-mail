@@ -279,8 +279,9 @@ class LookalikeEngine:
             legit_domain = info["domain"]
             legit_sld = LookalikeEngine.extract_sld(legit_domain)
             
-            # Case A: Brand name in subdomain but root domain is different
-            if f"{legit_sld}." in domain_lower and not domain_lower.endswith(f".{legit_domain}"):
+            # Case A: Brand name as a distinct subdomain label (e.g., paypal.attacker.xyz or login.paypal.account.com)
+            is_subdomain_label = (domain_lower.startswith(f"{legit_sld}.") or f".{legit_sld}." in domain_lower)
+            if is_subdomain_label and len(legit_sld) >= 3 and not (domain_lower == legit_domain or domain_lower.endswith(f".{legit_domain}")):
                 result["is_lookalike"] = True
                 result["target_brand"] = brand
                 result["legitimate_domain"] = legit_domain
@@ -288,7 +289,7 @@ class LookalikeEngine:
                 result["deception_type"] = "Subdomain Brand Spoofing"
                 result["risk_score_boost"] = 85
                 result["details"].append(
-                    f"Brand '{brand}' appears in the subdomain, but actual root domain is '{target_sld}'."
+                    f"Brand '{brand}' appears as a deceptive subdomain label, but actual root domain is '{target_sld}'."
                 )
                 return result
 

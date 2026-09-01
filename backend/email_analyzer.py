@@ -223,8 +223,9 @@ class EmailAnalyzer:
             legit_domain = b_info["domain"]
             legit_sld = LookalikeEngine.extract_sld(legit_domain)
             
-            # If display name mentions the brand
-            if brand in display_name_lower or b_info["category"].lower() in display_name_lower:
+            # If display name explicitly mentions the target brand (whole word match, min length 2)
+            brand_in_display = len(brand) >= 2 and bool(re.search(rf'\b{re.escape(brand)}\b', display_name_lower))
+            if brand_in_display:
                 # Check if sender domain matches legitimate brand domain
                 if sender_domain and not (sender_domain == legit_domain or sender_domain.endswith("." + legit_domain)):
                     impersonated_brand = brand

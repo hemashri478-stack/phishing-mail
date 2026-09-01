@@ -430,12 +430,119 @@
     }
 
     /* Real-Time Security Warning Banner */
+    /* =========================================================
+       TRUECALLER-STYLE 3-STATE EMAIL SAFETY INDICATOR
+       ========================================================= */
+    .truecaller-safety-card {
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      backdrop-filter: blur(14px);
+      border: 2px solid transparent;
+      transition: all 0.25s ease;
+    }
+
+    .truecaller-safety-card.state-scam {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(153, 27, 27, 0.38));
+      border-color: #ef4444;
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.28);
+    }
+
+    .truecaller-safety-card.state-suspicious {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(180, 83, 9, 0.35));
+      border-color: #f59e0b;
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.25);
+    }
+
+    .truecaller-safety-card.state-safe {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 95, 70, 0.32));
+      border-color: #10b981;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.22);
+    }
+
+    .truecaller-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .truecaller-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-family: inherit;
+    }
+
+    .state-scam .truecaller-badge {
+      color: #ff4d6d;
+    }
+
+    .state-suspicious .truecaller-badge {
+      color: #fbbf24;
+    }
+
+    .state-safe .truecaller-badge {
+      color: #34d399;
+    }
+
+    .truecaller-subtitle {
+      font-size: 13.5px;
+      font-weight: 600;
+      line-height: 1.45;
+    }
+
+    .state-scam .truecaller-subtitle {
+      color: #fecaca;
+    }
+
+    .state-suspicious .truecaller-subtitle {
+      color: #fef08a;
+    }
+
+    .state-safe .truecaller-subtitle {
+      color: #a7f3d0;
+    }
+
+    .truecaller-score-pill {
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .state-scam .truecaller-score-pill {
+      background: #ef4444;
+      color: #ffffff;
+    }
+
+    .state-suspicious .truecaller-score-pill {
+      background: #f59e0b;
+      color: #000000;
+    }
+
+    .state-safe .truecaller-score-pill {
+      background: #10b981;
+      color: #000000;
+    }
+
     .phishguard-alert-banner {
-      background: linear-gradient(135deg, rgba(239, 68, 68, 0.22), rgba(153, 27, 27, 0.3));
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(153, 27, 27, 0.25));
       border: 1.5px solid var(--neon-red);
       border-radius: 10px;
       padding: 16px 20px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       backdrop-filter: blur(10px);
       box-shadow: var(--glow-red);
       animation: alertPop 0.35s ease;
@@ -445,6 +552,12 @@
       background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 95, 70, 0.25));
       border-color: var(--neon-green);
       box-shadow: var(--glow-green);
+    }
+
+    .phishguard-alert-banner.suspicious-banner {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(180, 83, 9, 0.25));
+      border-color: var(--neon-amber);
+      box-shadow: var(--glow-amber);
     }
 
     @keyframes alertPop {
@@ -496,6 +609,173 @@
       color: #a7f3d0;
       list-style: none;
       padding-left: 0;
+    }
+
+    /* =========================================================
+       EMAIL CALLER ID CARD STYLING
+       ========================================================= */
+    .caller-id-card {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+      transition: all 0.25s ease;
+    }
+
+    .caller-id-card.state-scam {
+      border-color: rgba(239, 68, 68, 0.4);
+      background: linear-gradient(145deg, rgba(239, 68, 68, 0.08), rgba(15, 23, 42, 0.85));
+    }
+
+    .caller-id-card.state-suspicious {
+      border-color: rgba(245, 158, 11, 0.4);
+      background: linear-gradient(145deg, rgba(245, 158, 11, 0.08), rgba(15, 23, 42, 0.85));
+    }
+
+    .caller-id-card.state-safe {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: linear-gradient(145deg, rgba(16, 185, 129, 0.08), rgba(15, 23, 42, 0.85));
+    }
+
+    .caller-id-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .caller-id-title {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--neon-cyan);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .caller-id-status-badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .caller-id-status-badge.status-scam {
+      background: rgba(239, 68, 68, 0.25);
+      border: 1px solid #ef4444;
+      color: #ff4d6d;
+    }
+
+    .caller-id-status-badge.status-suspicious {
+      background: rgba(245, 158, 11, 0.25);
+      border: 1px solid #f59e0b;
+      color: #fbbf24;
+    }
+
+    .caller-id-status-badge.status-safe {
+      background: rgba(16, 185, 129, 0.25);
+      border: 1px solid #10b981;
+      color: #34d399;
+    }
+
+    .caller-id-main-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .caller-id-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .caller-id-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .caller-id-name {
+      font-size: 17px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 2px;
+      line-height: 1.3;
+    }
+
+    .caller-id-email {
+      font-size: 12.5px;
+      font-family: monospace;
+      color: #cbd5e1;
+      margin-bottom: 3px;
+      word-break: break-all;
+    }
+
+    .caller-id-domain {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    .caller-id-chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .caller-chip {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #e2e8f0;
+    }
+
+    .caller-chip.chip-warning {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: rgba(245, 158, 11, 0.4);
+      color: #fde047;
+    }
+
+    .caller-chip.chip-danger {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .caller-chip.chip-safe {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #86efac;
     }
 
     /* Email Header Meta */
@@ -1083,14 +1363,25 @@
             <!-- Dynamic warning banner injected here -->
             <div id="email-view-banner-slot"></div>
 
-            <!-- Email Meta -->
-            <div class="email-meta-card">
-              <div class="email-meta-subject" id="view-subject">Select an email from the left mailbox to inspect</div>
-              <div class="email-meta-grid">
-                <div><span class="email-meta-label">From: </span><span class="email-meta-val" id="view-from">--</span></div>
-                <div><span class="email-meta-label">Reply-To: </span><span class="email-meta-val" id="view-replyto">--</span></div>
-                <div><span class="email-meta-label">Date: </span><span class="email-meta-val" id="view-date">--</span></div>
-                <div><span class="email-meta-label">Security Protocol: </span><span class="email-meta-val" id="view-security-status" style="color:var(--neon-red);">PhishGuard Active</span></div>
+            <!-- Email Caller ID Card (Inserted after Truecaller banner and before email body) -->
+            <div id="email-caller-id-slot">
+              <div class="caller-id-card state-safe">
+                <div class="caller-id-header">
+                  <span class="caller-id-title">
+                    <span>👤</span> EMAIL CALLER ID
+                  </span>
+                  <span class="caller-id-status-badge status-safe">
+                    ✓ SENDER APPEARS LEGITIMATE
+                  </span>
+                </div>
+                <div class="caller-id-main-row">
+                  <div class="caller-id-avatar">📬</div>
+                  <div class="caller-id-details">
+                    <div class="caller-id-name" id="view-subject">Select an email from the left mailbox to inspect</div>
+                    <div class="caller-id-email" id="view-from">--</div>
+                    <div class="caller-id-domain"><span class="email-meta-label">Origin Domain: </span><span id="view-domain">--</span></div>
+                  </div>
+                </div>
               </div>
             </div>
 

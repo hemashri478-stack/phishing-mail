@@ -1,0 +1,151 @@
+id,category,true_is_phishing,predicted_is_phishing,risk_score,risk_level,detected_threats,correct
+1,LEGITIMATE,0,0,0,Safe,Clean,1
+2,LEGITIMATE,0,0,0,Safe,Clean,1
+3,LEGITIMATE,0,0,0,Safe,Clean,1
+4,LEGITIMATE,0,0,0,Safe,Clean,1
+5,LEGITIMATE,0,0,0,Safe,Clean,1
+6,LEGITIMATE,0,0,0,Safe,Clean,1
+7,LEGITIMATE,0,0,0,Safe,Clean,1
+8,LEGITIMATE,0,0,0,Safe,Clean,1
+9,LEGITIMATE,0,0,12,Safe,Financial / Fraud Lure,1
+10,LEGITIMATE,0,0,0,Safe,Clean,1
+11,LEGITIMATE,0,0,12,Safe,Financial / Fraud Lure,1
+12,LEGITIMATE,0,0,0,Safe,Clean,1
+13,LEGITIMATE,0,0,12,Safe,Financial / Fraud Lure,1
+14,LEGITIMATE,0,0,0,Safe,Clean,1
+15,LEGITIMATE,0,0,0,Safe,Clean,1
+16,LEGITIMATE,0,0,0,Safe,Clean,1
+17,LEGITIMATE,0,0,0,Safe,Clean,1
+18,LEGITIMATE,0,0,0,Safe,Clean,1
+19,LEGITIMATE,0,0,0,Safe,Clean,1
+20,LEGITIMATE,0,0,0,Safe,Clean,1
+21,LEGITIMATE,0,0,0,Safe,Clean,1
+22,LEGITIMATE,0,0,0,Safe,Clean,1
+23,LEGITIMATE,0,0,0,Safe,Clean,1
+24,LEGITIMATE,0,0,0,Safe,Clean,1
+25,LEGITIMATE,0,0,0,Safe,Clean,1
+26,LEGITIMATE,0,0,0,Safe,Clean,1
+27,LEGITIMATE,0,0,0,Safe,Clean,1
+28,LEGITIMATE,0,0,0,Safe,Clean,1
+29,LEGITIMATE,0,0,0,Safe,Clean,1
+30,LEGITIMATE,0,0,0,Safe,Clean,1
+31,LEGITIMATE,0,0,0,Safe,Clean,1
+32,LEGITIMATE,0,0,0,Safe,Clean,1
+33,LEGITIMATE,0,0,12,Safe,Financial / Fraud Lure,1
+34,LEGITIMATE,0,0,0,Safe,Clean,1
+35,LEGITIMATE,0,0,0,Safe,Clean,1
+36,LEGITIMATE,0,0,0,Safe,Clean,1
+37,LEGITIMATE,0,1,77,Dangerous,Financial / Fraud Lure; Display Name Spoofing,0
+38,LEGITIMATE,0,0,0,Safe,Clean,1
+39,LEGITIMATE,0,0,0,Safe,Clean,1
+40,LEGITIMATE,0,0,0,Safe,Clean,1
+41,LEGITIMATE,0,0,0,Safe,Clean,1
+42,LEGITIMATE,0,0,0,Safe,Clean,1
+43,LEGITIMATE,0,0,0,Safe,Clean,1
+44,LEGITIMATE,0,0,0,Safe,Clean,1
+45,LEGITIMATE,0,0,0,Safe,Clean,1
+46,LEGITIMATE,0,0,0,Safe,Clean,1
+47,LEGITIMATE,0,0,0,Safe,Clean,1
+48,LEGITIMATE,0,0,0,Safe,Clean,1
+49,LEGITIMATE,0,0,0,Safe,Clean,1
+50,LEGITIMATE,0,0,0,Safe,Clean,1
+51,LEGITIMATE,0,0,0,Safe,Clean,1
+52,LEGITIMATE,0,0,0,Safe,Clean,1
+53,LEGITIMATE,0,0,0,Safe,Clean,1
+54,LEGITIMATE,0,0,0,Safe,Clean,1
+55,LEGITIMATE,0,1,100,Dangerous,Display Name Spoofing; Lookalike Sender Domain,0
+56,LEGITIMATE,0,0,0,Safe,Clean,1
+57,LEGITIMATE,0,0,12,Safe,Financial / Fraud Lure,1
+58,LEGITIMATE,0,0,0,Safe,Clean,1
+59,LEGITIMATE,0,0,0,Safe,Clean,1
+60,LEGITIMATE,0,0,0,Safe,Clean,1
+61,SPAM,0,0,15,Safe,Credential Harvesting Intent,1
+62,SPAM,0,0,0,Safe,Clean,1
+63,SPAM,0,0,0,Safe,Clean,1
+64,SPAM,0,0,0,Safe,Clean,1
+65,SPAM,0,0,0,Safe,Clean,1
+66,SPAM,0,0,0,Safe,Clean,1
+67,SPAM,0,0,0,Safe,Clean,1
+68,SPAM,0,0,0,Safe,Clean,1
+69,SPAM,0,0,0,Safe,Clean,1
+70,SPAM,0,0,0,Safe,Clean,1
+71,SPAM,0,0,0,Safe,Clean,1
+72,SPAM,0,0,0,Safe,Clean,1
+73,SPAM,0,0,0,Safe,Clean,1
+74,SPAM,0,0,0,Safe,Clean,1
+75,SPAM,0,0,0,Safe,Clean,1
+76,SPAM,0,0,0,Safe,Clean,1
+77,SPAM,0,0,0,Safe,Clean,1
+78,SPAM,0,0,0,Safe,Clean,1
+79,SPAM,0,0,0,Safe,Clean,1
+80,SPAM,0,0,0,Safe,Clean,1
+81,SPAM,0,0,0,Safe,Clean,1
+82,SPAM,0,0,0,Safe,Clean,1
+83,SPAM,0,0,0,Safe,Clean,1
+84,SPAM,0,0,0,Safe,Clean,1
+85,SPAM,0,0,0,Safe,Clean,1
+86,SPAM,0,0,0,Safe,Clean,1
+87,SPAM,0,0,0,Safe,Clean,1
+88,SPAM,0,0,0,Safe,Clean,1
+89,SPAM,0,0,15,Safe,High Urgency & Fear Triggers,1
+90,SPAM,0,0,0,Safe,Clean,1
+91,PHISHING,1,1,100,Dangerous,Mismatched Link Destination; Reply-To Mismatch; High Urgency & Fear Triggers; Credential Harvesting Intent; Malicious / Phishing Links; Display Name Spoofing,1
+92,PHISHING,1,1,100,Dangerous,Mismatched Link Destination; High Urgency & Fear Triggers; Credential Harvesting Intent; Malicious / Phishing Links; Display Name Spoofing,1
+93,PHISHING,1,1,100,Dangerous,Mismatched Link Destination; Reply-To Mismatch; High Urgency & Fear Triggers; Malicious / Phishing Links; Display Name Spoofing,1
+94,PHISHING,1,1,100,Dangerous,Mismatched Link Destination; High Urgency & Fear Triggers; Credential Harvesting Intent; Lookalike Sender Domain; Malicious / Phishing Links; Display Name Spoofing,1
+95,PHISHING,1,1,100,Dangerous,Mismatched Link Destination; Reply-To Mismatch; High Urgency & Fear Triggers; Credential Harvesting Intent; Lookalike Sender Domain; Malicious / Phishing Links; Display Name Spoofing,1
+96,PHISHING,1,1,100,Dangerous,Free Webmail Impersonation; High-Risk Attachment; Financial / Fraud Lure; Credential Harvesting Intent; Malicious / Phishing Links; Display Name Spoofing,1
+97,PHISHING,1,1,100,Dangerous,High Urgency & Fear Triggers; Free Webmail Impersonation; Credential Harvesting Intent; Malicious / Phishing Links,1
+98,PHISHING,1,1,70,Dangerous,High Urgency & Fear Triggers; Malicious / Phishing Links,1
+99,PHISHING,1,1,100,Dangerous,Malicious / Phishing Links; Free Webmail Impersonation; Display Name Spoofing; Credential Harvesting Intent,1
+100,PHISHING,1,1,100,Dangerous,High Urgency & Fear Triggers; Financial / Fraud Lure; High-Risk Attachment; Reply-To Mismatch,1
+101,PHISHING,1,1,100,Dangerous,High Urgency & Fear Triggers; Financial / Fraud Lure; Display Name Spoofing; High-Risk Attachment,1
+102,PHISHING,1,0,39,Caution,High Urgency & Fear Triggers; Financial / Fraud Lure,0
+103,PHISHING,1,1,100,Dangerous,Malicious / Phishing Links; Financial / Fraud Lure; Display Name Spoofing,1
+104,PHISHING,1,1,100,Dangerous,Reply-To Mismatch; High Urgency & Fear Triggers; Lookalike Sender Domain; Malicious / Phishing Links; Display Name Spoofing,1
+105,PHISHING,1,1,100,Dangerous,High Urgency & Fear Triggers; Financial / Fraud Lure; High-Risk Attachment; Malicious / Phishing Links,1
+106,PHISHING,1,1,100,Dangerous,High Urgency & Fear Triggers; Display Name Spoofing; Malicious / Phishing Links,1
+107,PHISHING,1,1,100,Dangerous,Malicious / Phishing Links; Display Name Spoofing; Credential Harvesting Intent; Reply-To Mismatch,1
+108,PHISHING,1,1,100,Dangerous,Malicious / Phishing Links; Display Name Spoofing,1
+109,PHISHING,1,1,100,Dangerous,Financial / Fraud Lure; Display Name Spoofing; High-Risk Attachment,1
+110,PHISHING,1,1,100,Dangerous,High Urgency & Fear Triggers; Display Name Spoofing; Lookalike Sender Domain; Malicious / Phishing Links,1
+111,PHISHING,1,1,100,Dangerous,High Urgency & Fear Triggers; Display Name Spoofing; Lookalike Sender Domain; Malicious / Phishing Links,1
+112,PHISHING,1,1,100,Dangerous,Malicious / Phishing Links; Display Name Spoofing; Reply-To Mismatch,1
+113,PHISHING,1,1,100,Dangerous,High Urgency & Fear Triggers; Display Name Spoofing; Malicious / Phishing Links,1
+114,PHISHING,1,1,100,Dangerous,Display Name Spoofing; High-Risk Attachment,1
+115,PHISHING,1,0,40,Caution,Malicious / Phishing Links,0
+116,PHISHING,1,1,100,Dangerous,Malicious / Phishing Links; Display Name Spoofing,1
+117,PHISHING,1,1,55,High Risk,High Urgency & Fear Triggers; Malicious / Phishing Links,1
+118,PHISHING,1,1,55,High Risk,High Urgency & Fear Triggers; Reply-To Mismatch,1
+119,PHISHING,1,1,72,Dangerous,High Urgency & Fear Triggers; Financial / Fraud Lure; High-Risk Attachment,1
+120,PHISHING,1,1,60,High Risk,High Urgency & Fear Triggers; High-Risk Attachment,1
+121,PHISHING,1,0,12,Safe,Financial / Fraud Lure,0
+122,PHISHING,1,1,57,High Risk,High Urgency & Fear Triggers; Financial / Fraud Lure,1
+123,PHISHING,1,0,0,Safe,Clean,0
+124,PHISHING,1,1,65,High Risk,Display Name Spoofing,1
+125,PHISHING,1,1,100,Dangerous,Malicious / Phishing Links; Display Name Spoofing,1
+126,PHISHING,1,1,100,Dangerous,High Urgency & Fear Triggers; Credential Harvesting Intent; Lookalike Sender Domain; Malicious / Phishing Links; Display Name Spoofing,1
+127,PHISHING,1,1,100,Dangerous,High Urgency & Fear Triggers; Display Name Spoofing; High-Risk Attachment; Malicious / Phishing Links,1
+128,PHISHING,1,1,70,Dangerous,High Urgency & Fear Triggers; Credential Harvesting Intent; Malicious / Phishing Links,1
+129,PHISHING,1,1,55,High Risk,Malicious / Phishing Links; Credential Harvesting Intent,1
+130,PHISHING,1,1,60,High Risk,High Urgency & Fear Triggers; High-Risk Attachment,1
+131,PHISHING,1,1,45,High Risk,High-Risk Attachment,1
+132,PHISHING,1,0,40,Caution,Malicious / Phishing Links,0
+133,PHISHING,1,1,70,Dangerous,High Urgency & Fear Triggers; Malicious / Phishing Links,1
+134,PHISHING,1,0,27,Caution,High Urgency & Fear Triggers; Financial / Fraud Lure,0
+135,PHISHING,1,1,100,Dangerous,High Urgency & Fear Triggers; Display Name Spoofing; Malicious / Phishing Links,1
+136,SUSPICIOUS,0,0,40,Caution,Reply-To Mismatch,1
+137,SUSPICIOUS,0,0,12,Safe,Financial / Fraud Lure,1
+138,SUSPICIOUS,0,0,40,Caution,Reply-To Mismatch,1
+139,SUSPICIOUS,0,0,15,Safe,Credential Harvesting Intent,1
+140,SUSPICIOUS,0,0,0,Safe,Clean,1
+141,SUSPICIOUS,0,0,40,Caution,Reply-To Mismatch,1
+142,SUSPICIOUS,0,1,45,High Risk,High-Risk Attachment,0
+143,SUSPICIOUS,0,0,0,Safe,Clean,1
+144,SUSPICIOUS,0,0,0,Safe,Clean,1
+145,SUSPICIOUS,0,0,0,Safe,Clean,1
+146,SUSPICIOUS,0,0,0,Safe,Clean,1
+147,SUSPICIOUS,0,0,0,Safe,Clean,1
+148,SUSPICIOUS,0,0,0,Safe,Clean,1
+149,SUSPICIOUS,0,0,0,Safe,Clean,1
+150,SUSPICIOUS,0,0,0,Safe,Clean,1
