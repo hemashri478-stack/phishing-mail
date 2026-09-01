@@ -1413,12 +1413,15 @@
               <label>Subject Line:</label>
               <input type="text" id="craft-subject" class="form-input" value="Your Membership is Suspended (Action Required in 24h)">
             </div>
-            <div class="form-group">
-              <label>Target / Deceptive Link in Body:</label>
-              <input type="text" id="craft-link" class="form-input" value="https://netf1ix-billing-update.xyz/login">
+            <div class="form-group" style="grid-column: span 2;">
+              <label>Target URL / Embedded Link (Original or Duplicate):</label>
+              <input type="text" id="craft-link" class="form-input" value="https://netf1ix-billing-update.xyz/login" placeholder="e.g. https://paypal.com or https://pаypal.com">
+              <div id="craft-link-status" style="font-size:11.5px; margin-top:6px; font-weight:800; color:var(--neon-red); display:flex; align-items:center; gap:6px;">
+                <span>🚨</span> Duplicate / Typosquat URL: Mimicking Netflix ('netf1ix' with digit '1')
+              </div>
             </div>
-            <button id="btn-inject-custom" class="btn-inject-attack">
-              <span>🚀 Analyze & Inject</span>
+            <button id="btn-inject-custom" class="btn-inject-attack" style="height: fit-content; align-self: flex-end; margin-bottom: 2px;">
+              <span>🚀 Analyze & Detect Email</span>
             </button>
           </div>
         </div>

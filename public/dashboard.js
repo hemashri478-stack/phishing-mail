@@ -207,6 +207,15 @@ function initInbox() {
     if (activeEmails.length > 0) selectEmail(activeEmails[0].id);
   });
 
+  // Live Real-Time Target URL Inspector Listener
+  const craftLinkInput = document.getElementById("craft-link");
+  if (craftLinkInput) {
+    craftLinkInput.addEventListener("input", (e) => {
+      inspectTargetUrlLive(e.target.value);
+    });
+    inspectTargetUrlLive(craftLinkInput.value);
+  }
+
   // Custom Attack / Real Email Analyzer & Injector
   document.getElementById("btn-inject-custom").addEventListener("click", () => {
     const fromVal = document.getElementById("craft-from").value.trim();
@@ -262,6 +271,42 @@ function initInbox() {
   });
 }
 
+function inspectTargetUrlLive(url) {
+  const statusEl = document.getElementById("craft-link-status");
+  if (!statusEl) return;
+
+  if (!url || url.trim() === "") {
+    statusEl.innerHTML = `<span style="color:var(--text-muted);">ℹ️ Enter any target URL to detect whether it is authentic or a duplicate threat</span>`;
+    return;
+  }
+
+  const u = url.toLowerCase().trim();
+  const hasHomoglyph = url.includes('а') || url.includes('о') || url.includes('е') || url.includes('р') || url.includes('с');
+  const isTyposquat = u.includes('m1crosoft') || u.includes('amaz0n') || u.includes('netf1ix') || u.includes('docus1gn') || u.includes('paypa1') || u.includes('paypai');
+  const isDirectIp = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/.test(u);
+  const isAuthorityAt = u.includes('@') && (u.includes('http://') || u.includes('https://'));
+  const isCombosquat = (u.includes('paypal') || u.includes('netflix') || u.includes('microsoft') || u.includes('apple') || u.includes('chase') || u.includes('google')) && (u.includes('.xyz') || u.includes('.top') || u.includes('.biz') || u.includes('verify') || u.includes('update') || u.includes('security') || u.includes('support'));
+  const isAuthentic = (u.startsWith('https://paypal.com') || u.startsWith('https://www.paypal.com') || u.startsWith('https://google.com') || u.startsWith('https://www.google.com') || u.startsWith('https://github.com') || u.startsWith('https://apple.com') || u.startsWith('https://microsoft.com') || u.includes('.edu') || u.includes('.gov')) && !hasHomoglyph && !isTyposquat && !isCombosquat;
+
+  if (hasHomoglyph) {
+    statusEl.innerHTML = `<span style="color:var(--neon-red);">🚨 Duplicate / IDN Homoglyph Attack: Hidden Cyrillic character mimicking authentic brand domain</span>`;
+  } else if (isTyposquat) {
+    statusEl.innerHTML = `<span style="color:var(--neon-red);">🚨 Duplicate / Typosquatting Attack: Deceptive character substitution (e.g. digit '1' for 'i' / '0' for 'o')</span>`;
+  } else if (isDirectIp) {
+    statusEl.innerHTML = `<span style="color:var(--neon-red);">🚨 Raw IP Address Threat: URL points directly to unverified numerical server IP</span>`;
+  } else if (isAuthorityAt) {
+    statusEl.innerHTML = `<span style="color:var(--neon-red);">🚨 Authority '@' Deception Attack: Misleading prefix attempting to mask actual server host</span>`;
+  } else if (isCombosquat) {
+    statusEl.innerHTML = `<span style="color:var(--neon-red);">🚨 Combosquatting / Deceptive Domain: Brand name combined with suspicious TLD/keywords</span>`;
+  } else if (isAuthentic) {
+    statusEl.innerHTML = `<span style="color:var(--neon-green);">🟢 Authentic Original URL: Verified genuine domain and infrastructure</span>`;
+  } else if (u.includes('.xyz') || u.includes('.top') || u.includes('.biz') || u.includes('.tk')) {
+    statusEl.innerHTML = `<span style="color:var(--neon-amber);">🟡 Suspicious Domain: High-risk top-level domain (.xyz/.top/.biz) with no brand verification</span>`;
+  } else {
+    statusEl.innerHTML = `<span style="color:var(--neon-cyan);">🔍 Standard URL: Will be deeply evaluated with 29-feature ML Classifier and Sender Match</span>`;
+  }
+}
+
 window.loadEmailPreset = function(type) {
   const fromEl = document.getElementById("craft-from");
   const subEl = document.getElementById("craft-subject");
@@ -280,6 +325,8 @@ window.loadEmailPreset = function(type) {
     subEl.value = "Updated Semester Schedule and Academic Calendar";
     linkEl.value = "https://apex.edu/academics/schedule";
   }
+
+  inspectTargetUrlLive(linkEl.value);
 };
 
 function clientSideEmailScan(fromVal, subjectVal, linkVal) {
@@ -287,29 +334,33 @@ function clientSideEmailScan(fromVal, subjectVal, linkVal) {
   const subLower = subjectVal.toLowerCase();
   const linkLower = (linkVal || "").toLowerCase();
 
-  const isPhishDomain = fromLower.includes(".xyz") || fromLower.includes(".top") || fromLower.includes("update") || fromLower.includes("verify");
+  const hasHomoglyph = (linkVal || "").includes('а') || (linkVal || "").includes('о') || (linkVal || "").includes('е');
+  const isTyposquat = linkLower.includes('m1crosoft') || linkLower.includes('amaz0n') || linkLower.includes('netf1ix') || linkLower.includes('docus1gn');
+  const isDirectIp = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/.test(linkLower);
+  const isAtTrick = linkLower.includes('@');
+  const isPhishDomain = fromLower.includes(".xyz") || fromLower.includes(".top") || fromLower.includes("update") || fromLower.includes("verify") || linkLower.includes(".xyz") || linkLower.includes(".top");
   const isSpoofedBrand = (fromLower.includes("paypal") || fromLower.includes("netflix") || fromLower.includes("microsoft") || fromLower.includes("apple") || fromLower.includes("chase")) && isPhishDomain;
   const isUrgent = subLower.includes("urgent") || subLower.includes("restricted") || subLower.includes("suspended") || subLower.includes("24h") || subLower.includes("action required");
-  const isSafeDomain = fromLower.includes(".edu") || fromLower.includes(".gov") || fromLower.includes("github.com") || fromLower.includes("google.com");
+  const isSafeDomain = (fromLower.includes(".edu") || fromLower.includes(".gov") || fromLower.includes("github.com") || fromLower.includes("google.com")) && !hasHomoglyph && !isTyposquat;
 
   let score = 0;
   let threat = "Clean Verified Communication";
   let reasons = ["✓ Standard sender patterns verified", "✓ No malicious payloads or urgency triggers detected"];
 
-  if (isSafeDomain && !isPhishDomain) {
+  if (hasHomoglyph || isTyposquat || isDirectIp || isAtTrick || (isSpoofedBrand && isUrgent)) {
+    score = 100;
+    threat = hasHomoglyph ? "IDN Homoglyph Duplicate URL Attack" : (isTyposquat ? "Typosquatting Duplicate URL Attack" : (isDirectIp ? "Direct IP Credential Harvester" : "Display Name Spoofing & Phishing Lure"));
+    reasons = [
+      hasHomoglyph ? "Target URL uses Cyrillic homoglyph characters mimicking an authentic brand" : (isTyposquat ? "Target URL substitutes leetspeak characters (e.g. '1' for 'i')" : `Display Name claims brand identity from external mailbox '@${fromLower.split('@')[1] || 'unrecognized.xyz'}'`),
+      "Coercive urgency and credential harvesting intent identified"
+    ];
+  } else if (isSafeDomain && !isPhishDomain) {
     score = 0;
     threat = "Verified Authentic Communication";
-    reasons = ["✓ Verified authentic educational / corporate infrastructure", "✓ Sender identity matches legitimate domain"];
-  } else if (isSpoofedBrand || (isPhishDomain && isUrgent)) {
-    score = 95;
-    threat = "Display Name Spoofing & Lookalike Infrastructure";
-    reasons = [
-      `Display Name claims to represent a brand but mailbox originates from '@${fromLower.split('@')[1] || 'unrecognized.xyz'}'`,
-      "High-urgency psychological trigger designed to provoke immediate user compliance"
-    ];
-  } else if (isPhishDomain || isUrgent || fromLower.includes(".biz")) {
+    reasons = ["✓ Verified authentic educational / corporate infrastructure", "✓ Sender identity and target URL match legitimate domain"];
+  } else if (isPhishDomain || isUrgent || fromLower.includes(".biz") || linkLower.includes(".biz")) {
     score = 35;
-    threat = "Unverified External Sender";
+    threat = "Unverified External Sender & Target Link";
     reasons = ["Unfamiliar external top-level domain (.biz/.xyz)", "Unusual inbound subject line characteristics"];
   }
 
@@ -323,7 +374,7 @@ function clientSideEmailScan(fromVal, subjectVal, linkVal) {
     isPhish: score >= 45,
     score: score,
     threat: threat,
-    threat_categories: score >= 45 ? ["Display Name Spoofing", "High Urgency Triggers"] : (score >= 20 ? ["Unusual Sender Domain"] : []),
+    threat_categories: score >= 45 ? ["Malicious / Phishing Links", "Display Name Spoofing"] : (score >= 20 ? ["Unusual Sender Domain"] : []),
     reasons: reasons
   };
 }
