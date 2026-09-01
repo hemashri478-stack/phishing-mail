@@ -250,6 +250,24 @@ def root_index_handler():
     return health_check()
 
 
+@app.route("/dashboard.js", methods=["GET"])
+def dashboard_js_handler():
+    """Serves the dashboard.js file to ensure complete standalone operation"""
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    for candidate in [
+        os.path.join(base_dir, "public", "dashboard.js"),
+        os.path.join(base_dir, "dashboard", "dashboard.js"),
+        os.path.join(base_dir, "dashboard.js")
+    ]:
+        if os.path.exists(candidate):
+            try:
+                with open(candidate, "r", encoding="utf-8") as f:
+                    return f.read(), 200, {"Content-Type": "application/javascript; charset=utf-8"}
+            except Exception:
+                pass
+    return "console.error('dashboard.js not found');", 404
+
+
 @app.route("/health", methods=["GET"])
 def health_check():
     """Health check endpoint"""
