@@ -1,35 +1,13 @@
 {
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "api/index.py",
-      "use": "@vercel/python"
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
     },
     {
-      "src": "public/**",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "api/index.py"
-    },
-    {
-      "src": "/health",
-      "dest": "api/index.py"
-    },
-    {
-      "src": "/dashboard.js",
-      "dest": "public/dashboard.js"
-    },
-    {
-      "src": "/standalone_prototype.html",
-      "dest": "public/standalone_prototype.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "public/index.html"
+      "source": "/health",
+      "destination": "/api/index.py"
     }
   ]
 }

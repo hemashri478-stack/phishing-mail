@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhishLens PhishGuard - Real-Time Phishing Threat Guardian Prototype</title>
+  <style>
+    :root {
+      --bg-dark: #070a14;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --bg-card-hover: rgba(22, 33, 62, 0.85);
+      --border-cyan: rgba(0, 242, 254, 0.2);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --neon-cyan: #00f2fe;
+      --neon-blue: #3b82f6;
+      --neon-green: #10b981;
+      --neon-red: #ef4444;
+      --neon-amber: #f59e0b;
+      --neon-purple: #a855f7;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --glow-cyan: 0 0 20px rgba(0, 242, 254, 0.35);
+      --glow-red: 0 0 20px rgba(239, 68, 68, 0.4);
+      --glow-green: 0 0 20px rgba(16, 185, 129, 0.35);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at 20% 15%, #111a33 0%, var(--bg-dark) 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 50px;
+    }
+
+    /* Top Navigation */
+    .soc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 32px;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border-cyan);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-shield-icon {
+      font-size: 30px;
+      filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.8));
+      animation: shieldPulse 3s infinite ease-in-out;
+    }
+
+    @keyframes shieldPulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.8)); }
+      50% { transform: scale(1.06); filter: drop-shadow(0 0 18px rgba(0, 242, 254, 1)); }
+    }
+
+    .brand-title {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-subtag {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--neon-cyan);
+      background: rgba(0, 242, 254, 0.12);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      padding: 2px 8px;
+      border-radius: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .engine-status-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--neon-green);
+      background: rgba(16, 185, 129, 0.12);
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--neon-green);
+      box-shadow: 0 0 8px var(--neon-green);
+      animation: pulseAnim 1.8s infinite;
+    }
+
+    @keyframes pulseAnim {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(1.3); }
+    }
+
+    .sound-toggle-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .sound-toggle-btn.active {
+      color: var(--neon-cyan);
+      border-color: var(--neon-cyan);
+      background: rgba(0, 242, 254, 0.12);
+    }
+
+    /* Main Layout */
+    .main-container {
+      max-width: 1420px;
+      margin: 20px auto;
+      padding: 0 24px;
+    }
+
+    /* Live Telemetry Bar */
+    .telemetry-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .telemetry-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-cyan);
+      border-radius: 12px;
+      padding: 16px 20px;
+      backdrop-filter: blur(14px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .telemetry-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--glow-cyan);
+      border-color: var(--neon-cyan);
+    }
+
+    .telemetry-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .telemetry-value {
+      font-size: 26px;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    .telemetry-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    /* Navigation Mode Tabs */
+    .prototype-tabs {
+      display: flex;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 6px;
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
+      margin-bottom: 24px;
+    }
+
+    .prototype-tab {
+      flex: 1;
+      text-align: center;
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .prototype-tab:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .prototype-tab.active {
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(59, 130, 246, 0.2));
+      color: var(--neon-cyan);
+      border: 1px solid rgba(0, 242, 254, 0.45);
+      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.18);
+    }
+
+    .tab-pane {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Universal Card Styling */
+    .hud-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-cyan);
+      border-radius: 14px;
+      padding: 24px;
+      backdrop-filter: blur(14px);
+      margin-bottom: 24px;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .card-heading {
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* =========================================================
+       MODULE 1: INTERACTIVE WEBMAIL & INBOX SIMULATOR
+       ========================================================= */
+    .inbox-sim-layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 20px;
+      min-height: 600px;
+    }
+
+    /* Left Email List Sidebar */
+    .inbox-sidebar {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .inbox-sidebar-header {
+      padding: 14px 16px;
+      background: rgba(0, 0, 0, 0.25);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .inbox-sidebar-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .inbox-badge-count {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 10px;
+      background: var(--neon-red);
+      color: #fff;
+    }
+
+    .inbox-items-scroll {
+      flex: 1;
+      overflow-y: auto;
+      max-height: 520px;
+    }
+
+    .inbox-item-row {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      position: relative;
+    }
+
+    .inbox-item-row:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .inbox-item-row.active {
+      background: rgba(0, 242, 254, 0.1);
+      border-left: 3px solid var(--neon-cyan);
+    }
+
+    .inbox-item-row.phish-flagged {
+      border-left: 3px solid var(--neon-red);
+    }
+
+    .inbox-item-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .inbox-item-sender {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 180px;
+    }
+
+    .inbox-item-time {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .inbox-item-subject {
+      font-size: 12px;
+      font-weight: 600;
+      color: #cbd5e1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .inbox-item-snippet {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .inbox-tag-pill {
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    .inbox-tag-pill.danger {
+      background: rgba(239, 68, 68, 0.25);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .inbox-tag-pill.safe {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    /* Right Email Viewing Pane */
+    .email-view-pane {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Real-Time Security Warning Banner */
+    /* =========================================================
+       TRUECALLER-STYLE 3-STATE EMAIL SAFETY INDICATOR
+       ========================================================= */
+    .truecaller-safety-card {
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      backdrop-filter: blur(14px);
+      border: 2px solid transparent;
+      transition: all 0.25s ease;
+    }
+
+    .truecaller-safety-card.state-scam {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(153, 27, 27, 0.38));
+      border-color: #ef4444;
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.28);
+    }
+
+    .truecaller-safety-card.state-suspicious {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(180, 83, 9, 0.35));
+      border-color: #f59e0b;
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.25);
+    }
+
+    .truecaller-safety-card.state-safe {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 95, 70, 0.32));
+      border-color: #10b981;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.22);
+    }
+
+    .truecaller-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .truecaller-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-family: inherit;
+    }
+
+    .state-scam .truecaller-badge {
+      color: #ff4d6d;
+    }
+
+    .state-suspicious .truecaller-badge {
+      color: #fbbf24;
+    }
+
+    .state-safe .truecaller-badge {
+      color: #34d399;
+    }
+
+    .truecaller-subtitle {
+      font-size: 13.5px;
+      font-weight: 600;
+      line-height: 1.45;
+    }
+
+    .state-scam .truecaller-subtitle {
+      color: #fecaca;
+    }
+
+    .state-suspicious .truecaller-subtitle {
+      color: #fef08a;
+    }
+
+    .state-safe .truecaller-subtitle {
+      color: #a7f3d0;
+    }
+
+    .truecaller-score-pill {
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .state-scam .truecaller-score-pill {
+      background: #ef4444;
+      color: #ffffff;
+    }
+
+    .state-suspicious .truecaller-score-pill {
+      background: #f59e0b;
+      color: #000000;
+    }
+
+    .state-safe .truecaller-score-pill {
+      background: #10b981;
+      color: #000000;
+    }
+
+    .phishguard-alert-banner {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(153, 27, 27, 0.25));
+      border: 1.5px solid var(--neon-red);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 18px;
+      backdrop-filter: blur(10px);
+      box-shadow: var(--glow-red);
+      animation: alertPop 0.35s ease;
+    }
+
+    .phishguard-alert-banner.safe-banner {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 95, 70, 0.25));
+      border-color: var(--neon-green);
+      box-shadow: var(--glow-green);
+    }
+
+    .phishguard-alert-banner.suspicious-banner {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(180, 83, 9, 0.25));
+      border-color: var(--neon-amber);
+      box-shadow: var(--glow-amber);
+    }
+
+    @keyframes alertPop {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .banner-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .banner-threat-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--neon-red);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .safe-banner .banner-threat-title {
+      color: var(--neon-green);
+    }
+
+    .banner-risk-badge {
+      background: var(--neon-red);
+      color: #000;
+      font-weight: 900;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    .safe-banner .banner-risk-badge {
+      background: var(--neon-green);
+    }
+
+    .banner-reasons-list {
+      margin: 6px 0;
+      padding-left: 18px;
+      font-size: 12px;
+      color: #fca5a5;
+    }
+
+    .safe-banner .banner-reasons-list {
+      color: #a7f3d0;
+      list-style: none;
+      padding-left: 0;
+    }
+
+    /* =========================================================
+       EMAIL CALLER ID CARD STYLING
+       ========================================================= */
+    .caller-id-card {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+      transition: all 0.25s ease;
+    }
+
+    .caller-id-card.state-scam {
+      border-color: rgba(239, 68, 68, 0.4);
+      background: linear-gradient(145deg, rgba(239, 68, 68, 0.08), rgba(15, 23, 42, 0.85));
+    }
+
+    .caller-id-card.state-suspicious {
+      border-color: rgba(245, 158, 11, 0.4);
+      background: linear-gradient(145deg, rgba(245, 158, 11, 0.08), rgba(15, 23, 42, 0.85));
+    }
+
+    .caller-id-card.state-safe {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: linear-gradient(145deg, rgba(16, 185, 129, 0.08), rgba(15, 23, 42, 0.85));
+    }
+
+    .caller-id-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .caller-id-title {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--neon-cyan);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .caller-id-status-badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .caller-id-status-badge.status-scam {
+      background: rgba(239, 68, 68, 0.25);
+      border: 1px solid #ef4444;
+      color: #ff4d6d;
+    }
+
+    .caller-id-status-badge.status-suspicious {
+      background: rgba(245, 158, 11, 0.25);
+      border: 1px solid #f59e0b;
+      color: #fbbf24;
+    }
+
+    .caller-id-status-badge.status-safe {
+      background: rgba(16, 185, 129, 0.25);
+      border: 1px solid #10b981;
+      color: #34d399;
+    }
+
+    .caller-id-main-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .caller-id-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .caller-id-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .caller-id-name {
+      font-size: 17px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 2px;
+      line-height: 1.3;
+    }
+
+    .caller-id-email {
+      font-size: 12.5px;
+      font-family: monospace;
+      color: #cbd5e1;
+      margin-bottom: 3px;
+      word-break: break-all;
+    }
+
+    .caller-id-domain {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    .caller-id-chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .caller-chip {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #e2e8f0;
+    }
+
+    .caller-chip.chip-warning {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: rgba(245, 158, 11, 0.4);
+      color: #fde047;
+    }
+
+    .caller-chip.chip-danger {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .caller-chip.chip-safe {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #86efac;
+    }
+
+    /* Email Header Meta */
+    .email-meta-card {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+    }
+
+    .email-meta-subject {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .email-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .email-meta-label {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .email-meta-val {
+      color: #e2e8f0;
+      font-family: monospace;
+    }
+
+    .email-body-content {
+      background: rgba(0, 0, 0, 0.15);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 20px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #e2e8f0;
+      margin-bottom: 18px;
+      flex: 1;
+    }
+
+    .email-interactive-link {
+      color: #38bdf8;
+      text-decoration: underline;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.15s;
+    }
+
+    .email-interactive-link:hover {
+      color: var(--neon-cyan);
+    }
+
+    .link-risk-tag {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 6px;
+      background: rgba(239, 68, 68, 0.3);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.5);
+      margin-left: 6px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    /* Attack Injector / Custom Craft Bar */
+    .craft-attack-section {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px dashed var(--border-cyan);
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 20px;
+    }
+
+    .craft-attack-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .form-group label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .form-input {
+      padding: 8px 12px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      color: #ffffff;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--neon-cyan);
+    }
+
+    .btn-inject-attack {
+      padding: 8px 16px;
+      background: linear-gradient(90deg, var(--neon-red), #dc2626);
+      border: none;
+      border-radius: 6px;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.15s;
+    }
+
+    .btn-inject-attack:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--glow-red);
+    }
+
+    /* =========================================================
+       MODULE 2: URL SCANNER
+       ========================================================= */
+    .url-input-wrap {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .url-big-input {
+      flex: 1;
+      padding: 14px 18px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 10px;
+      color: #ffffff;
+      font-size: 14px;
+      font-family: monospace;
+      outline: none;
+    }
+
+    .url-big-input:focus {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 12px rgba(0, 242, 254, 0.35);
+    }
+
+    .btn-primary-action {
+      padding: 14px 28px;
+      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-blue));
+      border: none;
+      border-radius: 10px;
+      color: #050b14;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.15s, box-shadow 0.2s;
+    }
+
+    .btn-primary-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 242, 254, 0.45);
+    }
+
+    .preset-buttons-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    .preset-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: #cbd5e1;
+      padding: 5px 12px;
+      border-radius: 16px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .preset-chip:hover {
+      background: rgba(0, 242, 254, 0.15);
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+    }
+
+    .preset-chip.phish-chip {
+      border-color: rgba(239, 68, 68, 0.35);
+    }
+
+    .preset-chip.phish-chip:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: var(--neon-red);
+      color: #fca5a5;
+    }
+
+    .results-2col {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 20px;
+    }
+
+    .risk-gauge-box {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .gauge-ring {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 6px solid var(--neon-green);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      box-shadow: var(--glow-green);
+      transition: all 0.3s;
+    }
+
+    .gauge-ring.danger {
+      border-color: var(--neon-red);
+      box-shadow: var(--glow-red);
+    }
+
+    .gauge-ring.caution {
+      border-color: var(--neon-amber);
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+    }
+
+    .gauge-num {
+      font-size: 40px;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    .gauge-subtext {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+    }
+
+    .risk-title-label {
+      font-size: 18px;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .breakdown-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .info-subcard {
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .info-subcard-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--neon-cyan);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .key-value-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .key-label {
+      color: var(--text-muted);
+    }
+
+    .val-text {
+      font-weight: 600;
+      color: #e2e8f0;
+      font-family: monospace;
+    }
+
+    /* AI Threat Evaluation Box */
+    .ai-reasoning-panel {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, rgba(79, 172, 254, 0.1), rgba(168, 85, 247, 0.12));
+      border: 1.5px solid rgba(168, 85, 247, 0.35);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-top: 16px;
+    }
+
+    .ai-panel-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #c084fc;
+      margin-bottom: 8px;
+    }
+
+    /* =========================================================
+       MODULE 3: LOOKALIKE & TYPOSQUAT LAB
+       ========================================================= */
+    .lookalike-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+
+    .lookalike-table th, .lookalike-table td {
+      padding: 12px 14px;
+      text-align: left;
+      font-size: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .lookalike-table th {
+      color: var(--neon-cyan);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      background: rgba(0, 242, 254, 0.05);
+    }
+
+    /* =========================================================
+       IN-PAGE WARNING MODAL SIMULATOR
+       ========================================================= */
+    #prototype-warning-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 10, 19, 0.88);
+      backdrop-filter: blur(16px);
+      z-index: 99999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-content-card {
+      background: linear-gradient(145deg, #1e172e, #0c1122);
+      border: 2px solid var(--neon-red);
+      border-radius: 16px;
+      padding: 32px;
+      max-width: 580px;
+      width: 100%;
+      color: #ffffff;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(239, 68, 68, 0.4), 0 0 30px rgba(239, 68, 68, 0.25);
+      animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalPop {
+      from { opacity: 0; transform: scale(0.92); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-alert-icon {
+      font-size: 52px;
+      margin-bottom: 12px;
+      animation: alertPulse 1.5s infinite;
+    }
+
+    @keyframes alertPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+
+    .modal-title {
+      color: var(--neon-red);
+      font-size: 20px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .modal-desc {
+      color: #cbd5e1;
+      font-size: 13px;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .modal-info-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 24px;
+      text-align: left;
+      font-size: 12px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .btn-modal-safe {
+      padding: 12px 24px;
+      background: var(--neon-green);
+      border: none;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      flex: 2;
+      transition: transform 0.15s;
+    }
+
+    .btn-modal-safe:hover {
+      background: #059669;
+      transform: translateY(-2px);
+    }
+
+    .btn-modal-close {
+      padding: 12px 18px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .btn-modal-close:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.18);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="soc-header">
+    <div class="brand-section">
+      <span class="brand-shield-icon">🛡️</span>
+      <div>
+        <span class="brand-title">PhishLens PhishGuard</span>
+        <span class="brand-subtag">PROTOTYPE DEFENSE SUITE</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button id="btn-sound-toggle" class="sound-toggle-btn active">
+        <span>🔊</span> Audio Alerts: ON
+      </button>
+      <div class="engine-status-pill">
+        <span class="pulse-dot"></span>
+        <span id="engine-status-label">Active Real-Time Interceptor</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <!-- Top Telemetry Row -->
+    <section class="telemetry-row">
+      <div class="telemetry-card">
+        <div>
+          <div class="telemetry-label">Total Messages & Links</div>
+          <div class="telemetry-value" id="count-total">24</div>
+        </div>
+        <div class="telemetry-icon-wrap" style="color:var(--neon-cyan);">⚡</div>
+      </div>
+
+      <div class="telemetry-card">
+        <div>
+          <div class="telemetry-label">Phishing Attacks Blocked</div>
+          <div class="telemetry-value" id="count-phish" style="color:var(--neon-red);">16</div>
+        </div>
+        <div class="telemetry-icon-wrap" style="color:var(--neon-red);">🚫</div>
+      </div>
+
+      <div class="telemetry-card">
+        <div>
+          <div class="telemetry-label">Lookalike Domains Caught</div>
+          <div class="telemetry-value" id="count-lookalikes" style="color:var(--neon-amber);">11</div>
+        </div>
+        <div class="telemetry-icon-wrap" style="color:var(--neon-amber);">🔍</div>
+      </div>
+
+      <div class="telemetry-card">
+        <div>
+          <div class="telemetry-label">Spoofed Senders Intercepted</div>
+          <div class="telemetry-value" id="count-spoofs" style="color:var(--neon-purple);">9</div>
+        </div>
+        <div class="telemetry-icon-wrap" style="color:var(--neon-purple);">📧</div>
+      </div>
+    </section>
+
+    <!-- Prototype Mode Switcher Tabs -->
+    <nav class="prototype-tabs">
+      <div class="prototype-tab active" data-tab="pane-inbox-sim">
+        <span>📥</span> Live Webmail & Inbox Simulator
+      </div>
+      <div class="prototype-tab" data-tab="pane-url-inspector">
+        <span>🌐</span> URL Threat & Entropy Scanner
+      </div>
+      <div class="prototype-tab" data-tab="pane-lookalike-generator">
+        <span>🔬</span> Lookalike & Typosquat Domain Lab
+      </div>
+      <div class="prototype-tab" data-tab="pane-telemetry-logs">
+        <span>📊</span> Incident Telemetry & Threat Logs
+      </div>
+    </nav>
+
+    <!-- ==================== TAB 1: INBOX SIMULATOR ==================== -->
+    <section id="pane-inbox-sim" class="tab-pane active">
+      <div class="hud-card">
+        <div class="card-top">
+          <div class="card-heading">
+            <span>📥</span> Real-Time Webmail Interception Simulator
+          </div>
+          <div style="display:flex; gap:10px;">
+            <button id="btn-simulate-incoming" class="preset-chip" style="background:var(--neon-cyan); color:#000; font-weight:800;">
+              ⚡ Trigger Incoming Attack Stream
+            </button>
+            <button id="btn-reset-inbox" class="preset-chip">
+              🔄 Reset Inbox
+            </button>
+          </div>
+        </div>
+
+        <div class="inbox-sim-layout">
+          <!-- Left Sidebar Inbox -->
+          <div class="inbox-sidebar">
+            <div class="inbox-sidebar-header">
+              <span class="inbox-sidebar-title">
+                <span>📬</span> Incoming Mailbox
+              </span>
+              <span class="inbox-badge-count" id="inbox-unread-count">3 Phish</span>
+            </div>
+
+            <div class="inbox-items-scroll" id="inbox-list-container">
+              <!-- Dynamically populated emails -->
+            </div>
+          </div>
+
+          <!-- Right Email Reader View -->
+          <div class="email-view-pane" id="email-view-container">
+            <!-- Dynamic warning banner injected here -->
+            <div id="email-view-banner-slot"></div>
+
+            <!-- Email Caller ID Card (Inserted after Truecaller banner and before email body) -->
+            <div id="email-caller-id-slot">
+              <div class="caller-id-card state-safe">
+                <div class="caller-id-header">
+                  <span class="caller-id-title">
+                    <span>👤</span> EMAIL CALLER ID
+                  </span>
+                  <span class="caller-id-status-badge status-safe">
+                    ✓ SENDER APPEARS LEGITIMATE
+                  </span>
+                </div>
+                <div class="caller-id-main-row">
+                  <div class="caller-id-avatar">📬</div>
+                  <div class="caller-id-details">
+                    <div class="caller-id-name" id="view-subject">Select an email from the left mailbox to inspect</div>
+                    <div class="caller-id-email" id="view-from">--</div>
+                    <div class="caller-id-domain"><span class="email-meta-label">Origin Domain: </span><span id="view-domain">--</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Email Message Body -->
+            <div class="email-body-content" id="view-body">
+              Click any incoming message from the mailbox on the left to observe how PhishLens inspects sender patterns, analyzes lookalike links, and warns you in real-time before clicking!
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Attack Injector Bar -->
+        <div class="craft-attack-section">
+          <div style="font-size:12px; font-weight:800; color:var(--neon-cyan); margin-bottom:10px;">
+            🧪 Custom Attack Crafter - Inject Any Phishing Lure into the Live Stream:
+          </div>
+          <div class="craft-attack-grid">
+            <div class="form-group">
+              <label>Spoofed Display Name & Email:</label>
+              <input type="text" id="craft-from" class="form-input" value='Netflix Billing Support <service@netflix-verify99.xyz>'>
+            </div>
+            <div class="form-group">
+              <label>Urgent Subject Line:</label>
+              <input type="text" id="craft-subject" class="form-input" value="Your Membership is Suspended (Action Required in 24h)">
+            </div>
+            <div class="form-group">
+              <label>Deceptive Link in Body:</label>
+              <input type="text" id="craft-link" class="form-input" value="https://netf1ix-billing-update.xyz/login">
+            </div>
+            <button id="btn-inject-custom" class="btn-inject-attack">
+              <span>🚀 Inject to Inbox</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: URL SCANNER ==================== -->
+    <section id="pane-url-inspector" class="tab-pane">
+      <div class="hud-card">
+        <div class="card-top">
+          <div class="card-heading">
+            <span>🌐</span> Real-Time URL Phishing & Structural Threat Scanner
+          </div>
+          <span style="font-size:12px; color:var(--text-muted);">Zero-Latency Heuristic + Entropy + Lookalike Analysis</span>
+        </div>
+
+        <!-- Presets -->
+        <div class="preset-buttons-row">
+          <span style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Quick Presets:</span>
+          <button class="preset-chip phish-chip" onclick="loadUrlPreset('https://pаypal.com/signin/account-verify')">🚨 PayPal Homoglyph ('а')</button>
+          <button class="preset-chip phish-chip" onclick="loadUrlPreset('https://m1crosoft-login-auth.xyz/oauth2')">🚨 Microsoft 365 Typosquat</button>
+          <button class="preset-chip phish-chip" onclick="loadUrlPreset('http://192.168.1.100/chase/login.php')">🚨 Chase Direct IP Host</button>
+          <button class="preset-chip phish-chip" onclick="loadUrlPreset('https://apple.com@verify-account.top/portal')">🚨 Apple ID @ Deception</button>
+          <button class="preset-chip phish-chip" onclick="loadUrlPreset('https://netflix-billing-update-service.com/retry')">🚨 Netflix Combosquat</button>
+          <button class="preset-chip" onclick="loadUrlPreset('https://myaccount.google.com/security')">✅ Authentic Google Account</button>
+        </div>
+
+        <div class="url-input-wrap">
+          <input type="text" id="custom-url-input" class="url-big-input" placeholder="Enter target URL to analyze (e.g. https://pаypal.com/signin)">
+          <button id="btn-analyze-url" class="btn-primary-action">
+            <span>⚡ Deep Scan URL</span>
+          </button>
+        </div>
+
+        <div id="url-scan-results" class="results-2col" style="display:none;">
+          <div class="risk-gauge-box">
+            <div id="proto-gauge-ring" class="gauge-ring">
+              <span id="proto-gauge-num" class="gauge-num">0</span>
+              <span class="gauge-subtext">RISK SCORE</span>
+            </div>
+            <div id="proto-risk-title" class="risk-title-label" style="color:var(--neon-green);">SAFE</div>
+            <p id="proto-risk-rec" style="font-size:12px; color:var(--text-muted); line-height:1.4;">Verified safe website structure.</p>
+          </div>
+
+          <div class="breakdown-grid">
+            <div class="info-subcard">
+              <div class="info-subcard-title"><span>🔍</span> Lookalike & Brand Spoofing</div>
+              <div class="key-value-row">
+                <span class="key-label">Lookalike Detected:</span>
+                <span class="val-text" id="proto-lookalike-flag">No</span>
+              </div>
+              <div class="key-value-row">
+                <span class="key-label">Target Brand:</span>
+                <span class="val-text" id="proto-target-brand">None</span>
+              </div>
+              <div class="key-value-row">
+                <span class="key-label">Deception Technique:</span>
+                <span class="val-text" id="proto-deception-technique">None</span>
+              </div>
+            </div>
+
+            <div class="info-subcard">
+              <div class="info-subcard-title"><span>📐</span> Structural & Entropy Metrics</div>
+              <div class="key-value-row">
+                <span class="key-label">Domain Shannon Entropy:</span>
+                <span class="val-text" id="proto-entropy-score">2.2 / 5.0</span>
+              </div>
+              <div class="key-value-row">
+                <span class="key-label">Direct IP Address:</span>
+                <span class="val-text" id="proto-is-ip">No</span>
+              </div>
+              <div class="key-value-row">
+                <span class="key-label">Subdomain Depth:</span>
+                <span class="val-text" id="proto-subdomain-count">1 level</span>
+              </div>
+            </div>
+
+            <div class="info-subcard" style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(0, 242, 254, 0.08)); border-color: rgba(0, 242, 254, 0.3);">
+              <div class="info-subcard-title"><span>🤖</span> Machine Learning Model Signal (Trained ExtraTrees / 29 Features)</div>
+              <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; margin-bottom:8px;">
+                <div class="key-value-row">
+                  <span class="key-label">Model Verdict:</span>
+                  <span class="val-text" id="proto-ml-verdict" style="color:var(--neon-cyan);">Analyzing...</span>
+                </div>
+                <div class="key-value-row">
+                  <span class="key-label">ML Phishing Probability:</span>
+                  <span class="val-text" id="proto-ml-prob">0%</span>
+                </div>
+                <div class="key-value-row">
+                  <span class="key-label">Classifier Engine:</span>
+                  <span class="val-text" id="proto-ml-model">ExtraTrees Ensemble</span>
+                </div>
+              </div>
+              <div style="font-size:11px; color:var(--text-muted);">
+                <strong>Active Threat Features:</strong> <span id="proto-ml-features" style="color:#fca5a5;">None</span>
+              </div>
+            </div>
+
+            <div class="info-subcard" style="grid-column: 1 / -1;">
+              <div class="info-subcard-title"><span>🚨</span> Specific Threat Indicators & Red Flags</div>
+              <ul id="proto-indicators-list" style="margin:0; padding-left:18px; font-size:12px; color:#f87171;">
+                <li>No malicious indicators detected.</li>
+              </ul>
+            </div>
+
+            <div class="ai-reasoning-panel">
+              <div class="ai-panel-header">
+                <span>🤖</span> AI Contextual Intelligence & Safety Guidance
+              </div>
+              <p id="proto-ai-summary" style="font-size:13px; color:#e2e8f0; margin-bottom:8px; line-height:1.4;"></p>
+              <div id="proto-ai-actions" style="font-size:12px; color:#cbd5e1;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: LOOKALIKE LAB ==================== -->
+    <section id="pane-lookalike-generator" class="tab-pane">
+      <div class="hud-card">
+        <div class="card-top">
+          <div class="card-heading">
+            <span>🔬</span> Lookalike & Typosquatting Laboratory
+          </div>
+          <span style="font-size:12px; color:var(--text-muted);">IDN Homoglyphs • Punycode • Leetspeak • Combosquatting</span>
+        </div>
+
+        <div class="url-input-wrap">
+          <input type="text" id="lab-domain-input" class="url-big-input" placeholder="Enter target brand domain (e.g. paypal.com, apple.com, chase.com, netflix.com)">
+          <button id="btn-run-lab" class="btn-primary-action">
+            <span>🔬 Generate Variations</span>
+          </button>
+        </div>
+
+        <table class="lookalike-table">
+          <thead>
+            <tr>
+              <th>Attack Lookalike Variant</th>
+              <th>Attack Technique</th>
+              <th>Punycode Encoding</th>
+              <th>Visual Similarity</th>
+              <th>Risk Severity</th>
+            </tr>
+          </thead>
+          <tbody id="lab-variants-tbody">
+            <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Enter a brand domain above to simulate lookalike variations.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: TELEMETRY & LOGS ==================== -->
+    <section id="pane-telemetry-logs" class="tab-pane">
+      <div class="hud-card">
+        <div class="card-top">
+          <div class="card-heading">
+            <span>📊</span> Live Threat Telemetry & Interception Log
+          </div>
+          <button id="btn-export-log" class="preset-chip" style="background:var(--neon-cyan); color:#000; font-weight:800;">
+            📥 Export Telemetry JSON
+          </button>
+        </div>
+
+        <table class="lookalike-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Type</th>
+              <th>Target Analyzed</th>
+              <th>Risk Level</th>
+              <th>Threat Vector</th>
+              <th>Interception Status</th>
+            </tr>
+          </thead>
+          <tbody id="logs-tbody">
+            <!-- Dynamic logs -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== IN-PAGE WARNING MODAL ==================== -->
+  <div id="prototype-warning-modal">
+    <div class="modal-content-card">
+      <div class="modal-alert-icon">⚠️</div>
+      <h2 class="modal-title">CRITICAL PHISHING ATTACK BLOCKED</h2>
+      <p class="modal-desc">PhishLens prevented an attempt to navigate to a deceptive lookalike or credential harvesting portal.</p>
+
+      <div class="modal-info-box">
+        <div style="margin-bottom:6px;"><strong>Target URL:</strong> <span id="modal-url-text" style="color:#f87171; word-break:break-all;"></span></div>
+        <div style="margin-bottom:6px;"><strong>Threat Level:</strong> <span id="modal-risk-text" style="color:#ef4444; font-weight:bold;">100% Risk Score (Dangerous)</span></div>
+        <div style="margin-bottom:6px;"><strong>Impersonated Brand:</strong> <span id="modal-brand-text" style="color:#fbbf24; font-weight:bold;"></span></div>
+        <div><strong>Deception Indicators:</strong>
+          <ul id="modal-reasons-list" style="margin:4px 0 0 16px; color:#e2e8f0;"></ul>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="btn-modal-return" class="btn-modal-safe">
+          🛡️ Return to Safety (Recommended)
+        </button>
+        <button id="btn-modal-dismiss" class="btn-modal-close">
+          Dismiss
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

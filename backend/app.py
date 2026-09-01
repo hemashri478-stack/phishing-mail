@@ -231,6 +231,25 @@ def record_scan_telemetry(scan_type: str, item_name: str, result: Dict[str, Any]
 
 # --- API Routes ---
 
+@app.route("/", methods=["GET"])
+@app.route("/index.html", methods=["GET"])
+def root_index_handler():
+    """Serves the dashboard HTML or health status to prevent any 404 on Vercel"""
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    for candidate in [
+        os.path.join(base_dir, "public", "index.html"),
+        os.path.join(base_dir, "dashboard", "index.html"),
+        os.path.join(base_dir, "index.html")
+    ]:
+        if os.path.exists(candidate):
+            try:
+                with open(candidate, "r", encoding="utf-8") as f:
+                    return f.read(), 200, {"Content-Type": "text/html; charset=utf-8"}
+            except Exception:
+                pass
+    return health_check()
+
+
 @app.route("/health", methods=["GET"])
 def health_check():
     """Health check endpoint"""
