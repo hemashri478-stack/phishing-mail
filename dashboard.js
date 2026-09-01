@@ -245,10 +245,25 @@ function renderInboxList() {
 
   let phishCount = 0;
   activeEmails.forEach(mail => {
-    if (mail.isPhish) phishCount++;
+    const isScam = mail.isPhish || mail.score >= 45;
+    const isSuspicious = !mail.isPhish && mail.score >= 20 && mail.score < 45;
+    const isSafe = !mail.isPhish && mail.score < 20;
+
+    if (isScam) phishCount++;
+
+    let tagClass = "danger";
+    let tagText = `🔴 SCAM • ${mail.score}% Risk`;
+
+    if (isSuspicious) {
+      tagClass = "warning";
+      tagText = `🟡 SUSPICIOUS • ${mail.score}% Risk`;
+    } else if (isSafe) {
+      tagClass = "safe";
+      tagText = `🟢 SAFE • Verified Sender`;
+    }
 
     const row = document.createElement("div");
-    row.className = `inbox-item-row ${mail.isPhish ? 'phish-flagged' : ''}`;
+    row.className = `inbox-item-row ${isScam ? 'phish-flagged' : (isSuspicious ? 'suspicious-flagged' : '')}`;
     row.dataset.id = mail.id;
 
     row.innerHTML = `
@@ -259,8 +274,8 @@ function renderInboxList() {
       <div class="inbox-item-subject">${escapeHtml(mail.subject)}</div>
       <div class="inbox-item-snippet">${escapeHtml(mail.body.replace(/<[^>]*>/g, '').substring(0, 55))}...</div>
       <div>
-        <span class="inbox-tag-pill ${mail.isPhish ? 'danger' : 'safe'}">
-          ${mail.isPhish ? `🚨 ${mail.score}% RISK • PHISHING` : '✅ VERIFIED SAFE'}
+        <span class="inbox-tag-pill ${tagClass}">
+          ${tagText}
         </span>
       </div>
     `;
@@ -272,7 +287,7 @@ function renderInboxList() {
     container.appendChild(row);
   });
 
-  document.getElementById("inbox-unread-count").innerText = `${phishCount} Phish Detected`;
+  document.getElementById("inbox-unread-count").innerText = `${phishCount} Threats Caught`;
 }
 
 // ==================== EMAIL CALLER ID HELPERS ====================
