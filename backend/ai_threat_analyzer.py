@@ -7,8 +7,15 @@ import os
 import json
 import logging
 import re
+import warnings
 from typing import Dict, Any, Optional
-import google.generativeai as genai
+
+warnings.filterwarnings("ignore", category=FutureWarning)
+
+try:
+    import google.generativeai as genai
+except Exception:
+    genai = None
 
 logger = logging.getLogger(__name__)
 
@@ -23,8 +30,8 @@ class AIThreatAnalyzer:
 
     def init_gemini(self):
         """Initializes Gemini API if key is valid"""
-        if not self.api_key or self.api_key.startswith("AIzaSyCpxYzcgkVPk1X8QiC05Rc6"):
-            # If dummy or default placeholder key, do not fail loudly; use fallback
+        if not genai or not self.api_key or self.api_key.startswith("AIzaSyCpxYzcgkVPk1X8QiC05Rc6") or len(self.api_key) < 15:
+            # If dummy or default placeholder key, use reliable heuristic reasoner
             logger.info("ℹ️ Using Built-in Neural Heuristic Intelligence Engine")
             return
             
