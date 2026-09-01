@@ -4,7 +4,7 @@ if (Test-Path $gitPath) {
     $env:PATH = "$env:PATH;$gitPath"
 }
 
-Write-Host "🚀 Pushing PhishLens to https://github.com/hemashri478-stack/phishing-net.git..." -ForegroundColor Cyan
+Write-Host "🚀 Pushing PhishLens to https://github.com/hemashri478-stack/phishing-mail.git..." -ForegroundColor Cyan
 git push -u origin main
 
 if ($LASTEXITCODE -eq 0) {
