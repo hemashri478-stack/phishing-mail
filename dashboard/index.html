@@ -1394,24 +1394,31 @@
 
         <!-- Custom Attack Injector Bar -->
         <div class="craft-attack-section">
-          <div style="font-size:12px; font-weight:800; color:var(--neon-cyan); margin-bottom:10px;">
-            🧪 Custom Attack Crafter - Inject Any Phishing Lure into the Live Stream:
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+            <div style="font-size:12px; font-weight:800; color:var(--neon-cyan);">
+              🧪 Custom Email Crafter - Test Any Real Email with Live Truecaller AI & Caller ID:
+            </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="preset-chip phish-chip" onclick="loadEmailPreset('scam')" style="font-size:11px;">🔴 Load Scam Preset</button>
+              <button class="preset-chip" onclick="loadEmailPreset('suspicious')" style="font-size:11px; background:rgba(245, 158, 11, 0.2); border-color:#f59e0b; color:#fbbf24;">🟡 Load Suspicious Preset</button>
+              <button class="preset-chip safe-chip" onclick="loadEmailPreset('safe')" style="font-size:11px;">🟢 Load Safe Preset</button>
+            </div>
           </div>
           <div class="craft-attack-grid">
             <div class="form-group">
-              <label>Spoofed Display Name & Email:</label>
+              <label>Sender Display Name & Email:</label>
               <input type="text" id="craft-from" class="form-input" value='Netflix Billing Support <service@netflix-verify99.xyz>'>
             </div>
             <div class="form-group">
-              <label>Urgent Subject Line:</label>
+              <label>Subject Line:</label>
               <input type="text" id="craft-subject" class="form-input" value="Your Membership is Suspended (Action Required in 24h)">
             </div>
             <div class="form-group">
-              <label>Deceptive Link in Body:</label>
+              <label>Target / Deceptive Link in Body:</label>
               <input type="text" id="craft-link" class="form-input" value="https://netf1ix-billing-update.xyz/login">
             </div>
             <button id="btn-inject-custom" class="btn-inject-attack">
-              <span>🚀 Inject to Inbox</span>
+              <span>🚀 Analyze & Inject</span>
             </button>
           </div>
         </div>

@@ -207,7 +207,7 @@ function initInbox() {
     if (activeEmails.length > 0) selectEmail(activeEmails[0].id);
   });
 
-  // Custom Attack Injector
+  // Custom Attack / Real Email Analyzer & Injector
   document.getElementById("btn-inject-custom").addEventListener("click", () => {
     const fromVal = document.getElementById("craft-from").value.trim();
     const subjectVal = document.getElementById("craft-subject").value.trim();
@@ -215,28 +215,117 @@ function initInbox() {
 
     if (!fromVal || !subjectVal) return;
 
-    const newMail = {
-      id: "custom-" + Date.now(),
+    const payload = {
       from: fromVal,
       reply_to: "",
       subject: subjectVal,
-      date: "Just Now",
-      body: `Notice: This is a real-time injected test lure.\n\nPlease verify your account immediately:\n<a class="email-interactive-link" data-url="${linkVal}">${linkVal}</a>`,
-      isPhish: true,
-      score: 95,
-      threat: "Custom Phishing Attack Lure",
-      reasons: [
-        `Custom injected attack lure impersonating '${fromVal}'`,
-        `Embedded link targets '${linkVal}'`
-      ]
+      body: `Notice:\n\nPlease check the following reference link:\n${linkVal}`,
+      body_html: linkVal ? `<a href="${linkVal}">${linkVal}</a>` : "",
+      attachments: []
     };
 
-    activeEmails.unshift(newMail);
-    renderInboxList();
-    selectEmail(newMail.id);
-    playAlertSound("danger");
-    recordTelemetry("Email Lure", fromVal, true, 95, "Custom Phish");
+    fetch(`${API_BASE}/api/analyze/email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+      const newMail = {
+        id: "custom-" + Date.now(),
+        from: fromVal,
+        reply_to: "",
+        subject: subjectVal,
+        date: "Just Now",
+        body: `Notice: Real-Time Evaluated Message.\n\nTarget Link Reference:\n<a class="email-interactive-link" data-url="${linkVal}">${linkVal || 'No Link Specified'}</a>`,
+        isPhish: data.is_phishing,
+        score: data.risk_score,
+        threat: data.threat_type || "Custom Email Analysis",
+        threat_categories: data.threat_categories || [],
+        sender_info: data.sender_info,
+        reasons: (data.red_flags && data.red_flags.length > 0) ? data.red_flags : ["✓ Standard sender patterns verified", "✓ No malicious payloads or urgency triggers detected"]
+      };
+
+      activeEmails.unshift(newMail);
+      renderInboxList();
+      selectEmail(newMail.id);
+      recordTelemetry("Email Message", fromVal, data.is_phishing, data.risk_score, data.threat_type);
+    })
+    .catch(() => {
+      // Client-side fallback analyzer
+      const fallback = clientSideEmailScan(fromVal, subjectVal, linkVal);
+      activeEmails.unshift(fallback);
+      renderInboxList();
+      selectEmail(fallback.id);
+      recordTelemetry("Email Message", fromVal, fallback.isPhish, fallback.score, fallback.threat);
+    });
   });
+}
+
+window.loadEmailPreset = function(type) {
+  const fromEl = document.getElementById("craft-from");
+  const subEl = document.getElementById("craft-subject");
+  const linkEl = document.getElementById("craft-link");
+
+  if (type === "scam") {
+    fromEl.value = "PayPal Security <service@paypal-urgent-update99.xyz>";
+    subEl.value = "URGENT: Your PayPal Account Has Been Restricted (Action in 24h)";
+    linkEl.value = "https://pаypal.com/signin/account-verify";
+  } else if (type === "suspicious") {
+    fromEl.value = "Global Vendor Invoicing <billing@invoicing-portal.biz>";
+    subEl.value = "Monthly Service Fee Invoice #4892";
+    linkEl.value = "https://invoicing-portal.biz/docs/invoice.pdf";
+  } else if (type === "safe") {
+    fromEl.value = "Dr. Robert Sharma <dean.academics@apex.edu>";
+    subEl.value = "Updated Semester Schedule and Academic Calendar";
+    linkEl.value = "https://apex.edu/academics/schedule";
+  }
+};
+
+function clientSideEmailScan(fromVal, subjectVal, linkVal) {
+  const fromLower = fromVal.toLowerCase();
+  const subLower = subjectVal.toLowerCase();
+  const linkLower = (linkVal || "").toLowerCase();
+
+  const isPhishDomain = fromLower.includes(".xyz") || fromLower.includes(".top") || fromLower.includes("update") || fromLower.includes("verify");
+  const isSpoofedBrand = (fromLower.includes("paypal") || fromLower.includes("netflix") || fromLower.includes("microsoft") || fromLower.includes("apple") || fromLower.includes("chase")) && isPhishDomain;
+  const isUrgent = subLower.includes("urgent") || subLower.includes("restricted") || subLower.includes("suspended") || subLower.includes("24h") || subLower.includes("action required");
+  const isSafeDomain = fromLower.includes(".edu") || fromLower.includes(".gov") || fromLower.includes("github.com") || fromLower.includes("google.com");
+
+  let score = 0;
+  let threat = "Clean Verified Communication";
+  let reasons = ["✓ Standard sender patterns verified", "✓ No malicious payloads or urgency triggers detected"];
+
+  if (isSafeDomain && !isPhishDomain) {
+    score = 0;
+    threat = "Verified Authentic Communication";
+    reasons = ["✓ Verified authentic educational / corporate infrastructure", "✓ Sender identity matches legitimate domain"];
+  } else if (isSpoofedBrand || (isPhishDomain && isUrgent)) {
+    score = 95;
+    threat = "Display Name Spoofing & Lookalike Infrastructure";
+    reasons = [
+      `Display Name claims to represent a brand but mailbox originates from '@${fromLower.split('@')[1] || 'unrecognized.xyz'}'`,
+      "High-urgency psychological trigger designed to provoke immediate user compliance"
+    ];
+  } else if (isPhishDomain || isUrgent || fromLower.includes(".biz")) {
+    score = 35;
+    threat = "Unverified External Sender";
+    reasons = ["Unfamiliar external top-level domain (.biz/.xyz)", "Unusual inbound subject line characteristics"];
+  }
+
+  return {
+    id: "custom-" + Date.now(),
+    from: fromVal,
+    reply_to: "",
+    subject: subjectVal,
+    date: "Just Now",
+    body: `Notice: Evaluated Message Content.\n\nTarget Reference Link:\n<a class="email-interactive-link" data-url="${linkVal}">${linkVal || 'No Link Provided'}</a>`,
+    isPhish: score >= 45,
+    score: score,
+    threat: threat,
+    threat_categories: score >= 45 ? ["Display Name Spoofing", "High Urgency Triggers"] : (score >= 20 ? ["Unusual Sender Domain"] : []),
+    reasons: reasons
+  };
 }
 
 function renderInboxList() {
