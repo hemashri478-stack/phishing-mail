@@ -4,8 +4,12 @@ if (Test-Path $gitPath) {
     $env:PATH = "$env:PATH;$gitPath"
 }
 
+if (Test-Path "shadowlens-main\.git") {
+    Set-Location "shadowlens-main"
+}
+
 Write-Host "🚀 Pushing PhishLens to https://github.com/hemashri478-stack/phishing-mail.git..." -ForegroundColor Cyan
-git push -u origin main
+git push -u origin main --force
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "✅ Successfully pushed to GitHub!" -ForegroundColor Green
