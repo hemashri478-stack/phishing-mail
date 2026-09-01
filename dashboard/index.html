@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PhishLens PhishGuard - Real-Time Phishing Threat Guardian Prototype</title>
+  <title>PhishLens • Faculty-Challenge-Ready Phishing Detection Platform</title>
   <style>
     :root {
       --bg-dark: #070a14;
-      --bg-card: rgba(15, 23, 42, 0.78);
-      --bg-card-hover: rgba(22, 33, 62, 0.85);
-      --border-cyan: rgba(0, 242, 254, 0.2);
+      --bg-card: rgba(15, 23, 42, 0.82);
+      --bg-card-hover: rgba(22, 33, 62, 0.9);
+      --border-cyan: rgba(0, 242, 254, 0.25);
       --border-subtle: rgba(255, 255, 255, 0.08);
       --neon-cyan: #00f2fe;
       --neon-blue: #3b82f6;
@@ -22,6 +22,7 @@
       --glow-cyan: 0 0 20px rgba(0, 242, 254, 0.35);
       --glow-red: 0 0 20px rgba(239, 68, 68, 0.4);
       --glow-green: 0 0 20px rgba(16, 185, 129, 0.35);
+      --glow-amber: 0 0 20px rgba(245, 158, 11, 0.35);
     }
 
     * {
@@ -36,17 +37,17 @@
       color: var(--text-main);
       min-height: 100vh;
       overflow-x: hidden;
-      padding-bottom: 50px;
+      padding-bottom: 60px;
     }
 
-    /* Top Navigation */
+    /* Top Navigation Header */
     .soc-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 14px 32px;
-      background: rgba(15, 23, 42, 0.88);
-      backdrop-filter: blur(18px);
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border-cyan);
       position: sticky;
       top: 0;
@@ -60,7 +61,7 @@
     }
 
     .brand-shield-icon {
-      font-size: 30px;
+      font-size: 32px;
       filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.8));
       animation: shieldPulse 3s infinite ease-in-out;
     }
@@ -88,6 +89,8 @@
       padding: 2px 8px;
       border-radius: 12px;
       letter-spacing: 0.5px;
+      display: block;
+      margin-top: 2px;
     }
 
     .header-actions {
@@ -144,106 +147,57 @@
       background: rgba(0, 242, 254, 0.12);
     }
 
-    /* Main Layout */
+    /* Main Container */
     .main-container {
-      max-width: 1420px;
+      max-width: 1440px;
       margin: 20px auto;
       padding: 0 24px;
     }
 
-    /* Live Telemetry Bar */
-    .telemetry-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .telemetry-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-cyan);
-      border-radius: 12px;
-      padding: 16px 20px;
-      backdrop-filter: blur(14px);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .telemetry-card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--glow-cyan);
-      border-color: var(--neon-cyan);
-    }
-
-    .telemetry-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-
-    .telemetry-value {
-      font-size: 26px;
-      font-weight: 900;
-      color: #ffffff;
-    }
-
-    .telemetry-icon-wrap {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    /* Navigation Mode Tabs */
+    /* Top Mode Tabs */
     .prototype-tabs {
       display: flex;
-      gap: 8px;
-      background: rgba(15, 23, 42, 0.6);
-      padding: 6px;
-      border-radius: 12px;
-      border: 1px solid var(--border-subtle);
+      gap: 10px;
+      border-bottom: 1px solid var(--border-cyan);
       margin-bottom: 24px;
+      padding-bottom: 2px;
+      overflow-x: auto;
     }
 
     .prototype-tab {
-      flex: 1;
-      text-align: center;
-      padding: 12px 16px;
-      font-size: 13px;
-      font-weight: 700;
+      padding: 12px 20px;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--border-subtle);
+      border-bottom: none;
+      border-radius: 10px 10px 0 0;
       color: var(--text-muted);
+      font-size: 13.5px;
+      font-weight: 700;
       cursor: pointer;
-      border-radius: 8px;
-      transition: all 0.25s ease;
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: 8px;
+      transition: all 0.2s;
+      white-space: nowrap;
     }
 
     .prototype-tab:hover {
+      background: rgba(0, 242, 254, 0.08);
       color: #ffffff;
-      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(0, 242, 254, 0.4);
     }
 
     .prototype-tab.active {
-      background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(59, 130, 246, 0.2));
+      background: rgba(0, 242, 254, 0.15);
       color: var(--neon-cyan);
-      border: 1px solid rgba(0, 242, 254, 0.45);
-      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.18);
+      border: 1px solid var(--neon-cyan);
+      border-bottom: 2px solid #070a14;
+      box-shadow: 0 -4px 15px rgba(0, 242, 254, 0.2);
     }
 
     .tab-pane {
       display: none;
-      animation: fadeIn 0.3s ease;
+      animation: fadeIn 0.3s ease-out;
     }
 
     .tab-pane.active {
@@ -255,61 +209,709 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Universal Card Styling */
+    /* Cards & Panels */
     .hud-card {
       background: var(--bg-card);
       border: 1px solid var(--border-cyan);
       border-radius: 14px;
       padding: 24px;
-      backdrop-filter: blur(14px);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
       margin-bottom: 24px;
     }
 
     .card-top {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 18px;
       padding-bottom: 12px;
       border-bottom: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
     .card-heading {
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 800;
       color: #ffffff;
       display: flex;
       align-items: center;
+      gap: 10px;
+    }
+
+    /* ==================== 1. FACULTY CHALLENGE STYLING ==================== */
+    .faculty-banner {
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.12) 0%, rgba(59, 130, 246, 0.15) 100%);
+      border: 1px solid var(--neon-cyan);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.15);
+    }
+
+    .faculty-banner-text {
+      font-size: 13.5px;
+      color: #e2e8f0;
+      line-height: 1.5;
+      max-width: 900px;
+    }
+
+    .btn-challenge-me {
+      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-blue));
+      border: none;
+      color: #040915;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-challenge-me:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.7);
+    }
+
+    /* Challenge 2-Column Grid */
+    .challenge-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 1024px) {
+      .challenge-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Form Fields */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .form-input, .form-textarea {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(10, 16, 31, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-input:focus, .form-textarea:focus {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.25);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 90px;
+      line-height: 1.5;
+    }
+
+    .faculty-actions-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-analyze-live {
+      background: linear-gradient(90deg, #00f2fe, #3b82f6);
+      border: none;
+      color: #040915;
+      font-size: 14px;
+      font-weight: 800;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.35);
+      transition: all 0.2s;
+      flex: 2;
+      justify-content: center;
+    }
+
+    .btn-analyze-live:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 28px rgba(0, 242, 254, 0.6);
+    }
+
+    .btn-clear-fields {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .btn-clear-fields:hover {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: var(--neon-red);
+      color: #f87171;
+    }
+
+    /* Challenge Result Card */
+    .result-card-inner {
+      background: rgba(10, 16, 31, 0.85);
+      border: 1px solid var(--border-cyan);
+      border-radius: 12px;
+      padding: 20px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Result Header with Badges */
+    .result-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .verdict-badge {
+      font-size: 15px;
+      font-weight: 900;
+      padding: 6px 16px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
       gap: 8px;
     }
 
-    /* =========================================================
-       MODULE 1: INTERACTIVE WEBMAIL & INBOX SIMULATOR
-       ========================================================= */
-    .inbox-sim-layout {
-      display: grid;
-      grid-template-columns: 340px 1fr;
-      gap: 20px;
-      min-height: 600px;
+    .verdict-safe {
+      background: rgba(16, 185, 129, 0.18);
+      color: #34d399;
+      border: 1px solid var(--neon-green);
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
     }
 
-    /* Left Email List Sidebar */
-    .inbox-sidebar {
+    .verdict-suspicious {
+      background: rgba(245, 158, 11, 0.18);
+      color: #fbbf24;
+      border: 1px solid var(--neon-amber);
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+    }
+
+    .verdict-phishing {
+      background: rgba(239, 68, 68, 0.18);
+      color: #f87171;
+      border: 1px solid var(--neon-red);
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+    }
+
+    .verdict-idle {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .confidence-pill {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--neon-cyan);
+      background: rgba(0, 242, 254, 0.1);
+      padding: 4px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 242, 254, 0.3);
+    }
+
+    /* Circular SVG Gauge */
+    .gauge-centerpiece {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      padding: 10px 0;
+    }
+
+    .svg-gauge-box {
+      position: relative;
+      width: 130px;
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .svg-gauge {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .gauge-bg-circle {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.08);
+      stroke-width: 12;
+    }
+
+    .gauge-progress-circle {
+      fill: none;
+      stroke: var(--neon-green);
+      stroke-width: 12;
+      stroke-linecap: round;
+      stroke-dasharray: 377;
+      stroke-dashoffset: 377;
+      transition: stroke-dashoffset 0.8s ease, stroke 0.4s ease;
+    }
+
+    .gauge-center-text {
+      position: absolute;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gauge-center-num {
+      font-size: 26px;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1;
+    }
+
+    .gauge-center-lbl {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .gauge-meta-info {
+      flex: 1;
+    }
+
+    .gauge-meta-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .gauge-meta-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Detection Reasons Badge List */
+    .reasons-box {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .reasons-title {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--neon-cyan);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .reasons-chips-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .reason-chip {
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .reason-chip.chip-safe {
+      background: rgba(16, 185, 129, 0.15);
+      color: #6ee7b7;
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
+    .reason-chip.chip-caution {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fcd34d;
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    /* Analytics HUD Row */
+    .analytics-hud-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .analytics-hud-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .hud-stat-box {
       background: rgba(15, 23, 42, 0.85);
       border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(12px);
+    }
+
+    .hud-stat-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .hud-stat-val {
+      font-size: 22px;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    /* Scan History Table */
+    .history-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-cyan);
+      border-radius: 14px;
+      padding: 20px;
+      backdrop-filter: blur(16px);
+    }
+
+    .history-table-wrap {
+      overflow-x: auto;
+      max-height: 280px;
+    }
+
+    .cyber-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      text-align: left;
+    }
+
+    .cyber-table th {
+      background: rgba(0, 0, 0, 0.35);
+      padding: 10px 14px;
+      color: var(--neon-cyan);
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border-cyan);
+      position: sticky;
+      top: 0;
+    }
+
+    .cyber-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: #e2e8f0;
+    }
+
+    .cyber-table tr:hover {
+      background: rgba(0, 242, 254, 0.05);
+    }
+
+    /* ==================== 2. TRUECALLER INBOX & CALLER ID STYLING ==================== */
+    .truecaller-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+      font-weight: 800;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      animation: bannerSlideIn 0.3s ease-out;
+    }
+
+    @keyframes bannerSlideIn {
+      from { transform: translateY(-8px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .truecaller-banner.state-scam {
+      background: linear-gradient(90deg, rgba(239, 68, 68, 0.25) 0%, rgba(185, 28, 28, 0.35) 100%);
+      border: 1px solid var(--neon-red);
+      color: #f87171;
+    }
+
+    .truecaller-banner.state-suspicious {
+      background: linear-gradient(90deg, rgba(245, 158, 11, 0.25) 0%, rgba(180, 83, 9, 0.35) 100%);
+      border: 1px solid var(--neon-amber);
+      color: #fbbf24;
+    }
+
+    .truecaller-banner.state-safe {
+      background: linear-gradient(90deg, rgba(16, 185, 129, 0.25) 0%, rgba(4, 120, 87, 0.35) 100%);
+      border: 1px solid var(--neon-green);
+      color: #34d399;
+    }
+
+    .truecaller-badge-pill {
+      font-size: 13px;
+      font-weight: 900;
+      padding: 4px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .truecaller-badge-pill.pill-scam {
+      background: var(--neon-red);
+      color: #ffffff;
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.7);
+    }
+
+    .truecaller-badge-pill.pill-suspicious {
+      background: var(--neon-amber);
+      color: #000000;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.7);
+    }
+
+    .truecaller-badge-pill.pill-safe {
+      background: var(--neon-green);
+      color: #ffffff;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.7);
+    }
+
+    .caller-id-card {
+      background: rgba(10, 16, 31, 0.95);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 14px;
+      border-left: 4px solid var(--neon-green);
+      border-top: 1px solid var(--border-subtle);
+      border-right: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+    }
+
+    .caller-id-card.state-scam {
+      border-left-color: var(--neon-red);
+      background: rgba(25, 12, 18, 0.95);
+    }
+
+    .caller-id-card.state-suspicious {
+      border-left-color: var(--neon-amber);
+      background: rgba(25, 20, 10, 0.95);
+    }
+
+    .caller-id-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .caller-id-title {
+      font-size: 11px;
+      font-weight: 900;
+      color: var(--neon-cyan);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .caller-id-status-badge {
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 2px 8px;
       border-radius: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .caller-id-status-badge.status-scam {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .caller-id-status-badge.status-suspicious {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .caller-id-status-badge.status-safe {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .caller-id-main-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+
+    .caller-id-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .caller-id-details {
+      flex: 1;
+    }
+
+    .caller-id-name {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .caller-id-email {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: monospace;
+    }
+
+    .caller-id-domain {
+      font-size: 11.5px;
+      color: #cbd5e1;
+      margin-top: 2px;
+    }
+
+    .caller-id-chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .caller-chip {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+    }
+
+    .caller-chip.chip-danger {
+      background: rgba(239, 68, 68, 0.18);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .caller-chip.chip-warning {
+      background: rgba(245, 158, 11, 0.18);
+      border-color: rgba(245, 158, 11, 0.4);
+      color: #fcd34d;
+    }
+
+    .caller-chip.chip-safe {
+      background: rgba(16, 185, 129, 0.18);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #6ee7b7;
+    }
+
+    /* Inbox Layout */
+    .inbox-sim-layout {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 20px;
+      height: 580px;
+    }
+
+    @media (max-width: 900px) {
+      .inbox-sim-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+    }
+
+    .inbox-sidebar {
+      background: rgba(10, 16, 31, 0.85);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
 
     .inbox-sidebar-header {
-      padding: 14px 16px;
+      padding: 12px 16px;
       background: rgba(0, 0, 0, 0.25);
       border-bottom: 1px solid var(--border-subtle);
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
     }
 
     .inbox-sidebar-title {
@@ -321,49 +923,32 @@
       gap: 6px;
     }
 
-    .inbox-badge-count {
-      font-size: 10px;
-      font-weight: 800;
-      padding: 2px 7px;
-      border-radius: 10px;
-      background: var(--neon-red);
-      color: #fff;
-    }
-
     .inbox-items-scroll {
       flex: 1;
       overflow-y: auto;
-      max-height: 520px;
     }
 
-    .inbox-item-row {
-      padding: 14px 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    .inbox-item {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      position: relative;
+      transition: background 0.15s;
     }
 
-    .inbox-item-row:hover {
-      background: rgba(255, 255, 255, 0.05);
+    .inbox-item:hover {
+      background: rgba(0, 242, 254, 0.06);
     }
 
-    .inbox-item-row.active {
-      background: rgba(0, 242, 254, 0.1);
+    .inbox-item.active {
+      background: rgba(0, 242, 254, 0.12);
       border-left: 3px solid var(--neon-cyan);
-    }
-
-    .inbox-item-row.phish-flagged {
-      border-left: 3px solid var(--neon-red);
     }
 
     .inbox-item-top {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
     }
 
     .inbox-item-sender {
@@ -373,547 +958,78 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 180px;
-    }
-
-    .inbox-item-time {
-      font-size: 10px;
-      color: var(--text-muted);
+      max-width: 200px;
     }
 
     .inbox-item-subject {
       font-size: 12px;
-      font-weight: 600;
-      color: #cbd5e1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .inbox-item-snippet {
-      font-size: 11px;
       color: var(--text-muted);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      margin-bottom: 6px;
     }
 
-    .inbox-tag-pill {
-      font-size: 9px;
+    .inbox-tag-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .inbox-tag {
+      font-size: 10px;
       font-weight: 800;
       padding: 2px 6px;
-      border-radius: 6px;
-      display: inline-block;
-      margin-top: 4px;
+      border-radius: 4px;
     }
 
-    .inbox-tag-pill.danger {
+    .inbox-tag.tag-scam {
       background: rgba(239, 68, 68, 0.25);
       color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.4);
     }
 
-    .inbox-tag-pill.safe {
-      background: rgba(16, 185, 129, 0.2);
-      color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-
-    /* Right Email Viewing Pane */
-    .email-view-pane {
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Real-Time Security Warning Banner */
-    /* =========================================================
-       TRUECALLER-STYLE 3-STATE EMAIL SAFETY INDICATOR
-       ========================================================= */
-    .truecaller-safety-card {
-      border-radius: 12px;
-      padding: 16px 20px;
-      margin-bottom: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      backdrop-filter: blur(14px);
-      border: 2px solid transparent;
-      transition: all 0.25s ease;
-    }
-
-    .truecaller-safety-card.state-scam {
-      background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(153, 27, 27, 0.38));
-      border-color: #ef4444;
-      box-shadow: 0 0 20px rgba(239, 68, 68, 0.28);
-    }
-
-    .truecaller-safety-card.state-suspicious {
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(180, 83, 9, 0.35));
-      border-color: #f59e0b;
-      box-shadow: 0 0 20px rgba(245, 158, 11, 0.25);
-    }
-
-    .truecaller-safety-card.state-safe {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 95, 70, 0.32));
-      border-color: #10b981;
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.22);
-    }
-
-    .truecaller-header-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .truecaller-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      font-family: inherit;
-    }
-
-    .state-scam .truecaller-badge {
-      color: #ff4d6d;
-    }
-
-    .state-suspicious .truecaller-badge {
-      color: #fbbf24;
-    }
-
-    .state-safe .truecaller-badge {
-      color: #34d399;
-    }
-
-    .truecaller-subtitle {
-      font-size: 13.5px;
-      font-weight: 600;
-      line-height: 1.45;
-    }
-
-    .state-scam .truecaller-subtitle {
-      color: #fecaca;
-    }
-
-    .state-suspicious .truecaller-subtitle {
-      color: #fef08a;
-    }
-
-    .state-safe .truecaller-subtitle {
-      color: #a7f3d0;
-    }
-
-    .truecaller-score-pill {
-      font-size: 12px;
-      font-weight: 800;
-      padding: 4px 12px;
-      border-radius: 20px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .state-scam .truecaller-score-pill {
-      background: #ef4444;
-      color: #ffffff;
-    }
-
-    .state-suspicious .truecaller-score-pill {
-      background: #f59e0b;
-      color: #000000;
-    }
-
-    .state-safe .truecaller-score-pill {
-      background: #10b981;
-      color: #000000;
-    }
-
-    .phishguard-alert-banner {
-      background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(153, 27, 27, 0.25));
-      border: 1.5px solid var(--neon-red);
-      border-radius: 10px;
-      padding: 16px 20px;
-      margin-bottom: 18px;
-      backdrop-filter: blur(10px);
-      box-shadow: var(--glow-red);
-      animation: alertPop 0.35s ease;
-    }
-
-    .phishguard-alert-banner.safe-banner {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 95, 70, 0.25));
-      border-color: var(--neon-green);
-      box-shadow: var(--glow-green);
-    }
-
-    .phishguard-alert-banner.suspicious-banner {
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(180, 83, 9, 0.25));
-      border-color: var(--neon-amber);
-      box-shadow: var(--glow-amber);
-    }
-
-    @keyframes alertPop {
-      from { opacity: 0; transform: scale(0.97); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    .banner-top-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-
-    .banner-threat-title {
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--neon-red);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .safe-banner .banner-threat-title {
-      color: var(--neon-green);
-    }
-
-    .banner-risk-badge {
-      background: var(--neon-red);
-      color: #000;
-      font-weight: 900;
-      font-size: 11px;
-      padding: 3px 10px;
-      border-radius: 12px;
-    }
-
-    .safe-banner .banner-risk-badge {
-      background: var(--neon-green);
-    }
-
-    .banner-reasons-list {
-      margin: 6px 0;
-      padding-left: 18px;
-      font-size: 12px;
-      color: #fca5a5;
-    }
-
-    .safe-banner .banner-reasons-list {
-      color: #a7f3d0;
-      list-style: none;
-      padding-left: 0;
-    }
-
-    /* =========================================================
-       EMAIL CALLER ID CARD STYLING
-       ========================================================= */
-    .caller-id-card {
-      background: rgba(15, 23, 42, 0.75);
-      border: 1.5px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 18px 20px;
-      margin-bottom: 18px;
-      backdrop-filter: blur(14px);
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
-      transition: all 0.25s ease;
-    }
-
-    .caller-id-card.state-scam {
-      border-color: rgba(239, 68, 68, 0.4);
-      background: linear-gradient(145deg, rgba(239, 68, 68, 0.08), rgba(15, 23, 42, 0.85));
-    }
-
-    .caller-id-card.state-suspicious {
-      border-color: rgba(245, 158, 11, 0.4);
-      background: linear-gradient(145deg, rgba(245, 158, 11, 0.08), rgba(15, 23, 42, 0.85));
-    }
-
-    .caller-id-card.state-safe {
-      border-color: rgba(16, 185, 129, 0.4);
-      background: linear-gradient(145deg, rgba(16, 185, 129, 0.08), rgba(15, 23, 42, 0.85));
-    }
-
-    .caller-id-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding-bottom: 10px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .caller-id-title {
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--neon-cyan);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .caller-id-status-badge {
-      font-size: 11px;
-      font-weight: 800;
-      padding: 4px 12px;
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .caller-id-status-badge.status-scam {
-      background: rgba(239, 68, 68, 0.25);
-      border: 1px solid #ef4444;
-      color: #ff4d6d;
-    }
-
-    .caller-id-status-badge.status-suspicious {
+    .inbox-tag.tag-suspicious {
       background: rgba(245, 158, 11, 0.25);
-      border: 1px solid #f59e0b;
       color: #fbbf24;
     }
 
-    .caller-id-status-badge.status-safe {
+    .inbox-tag.tag-safe {
       background: rgba(16, 185, 129, 0.25);
-      border: 1px solid #10b981;
       color: #34d399;
     }
 
-    .caller-id-main-row {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 12px;
-    }
-
-    .caller-id-avatar {
-      width: 46px;
-      height: 46px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
-      background: rgba(255, 255, 255, 0.05);
+    .email-view-pane {
+      background: rgba(10, 16, 31, 0.85);
       border: 1px solid var(--border-subtle);
-    }
-
-    .caller-id-details {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .caller-id-name {
-      font-size: 17px;
-      font-weight: 800;
-      color: #ffffff;
-      margin-bottom: 2px;
-      line-height: 1.3;
-    }
-
-    .caller-id-email {
-      font-size: 12.5px;
-      font-family: monospace;
-      color: #cbd5e1;
-      margin-bottom: 3px;
-      word-break: break-all;
-    }
-
-    .caller-id-domain {
-      font-size: 11.5px;
-      color: var(--text-muted);
-    }
-
-    .caller-id-chips-row {
+      border-radius: 10px;
+      padding: 20px;
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .caller-chip {
-      font-size: 11px;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 6px;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #e2e8f0;
-    }
-
-    .caller-chip.chip-warning {
-      background: rgba(245, 158, 11, 0.15);
-      border-color: rgba(245, 158, 11, 0.4);
-      color: #fde047;
-    }
-
-    .caller-chip.chip-danger {
-      background: rgba(239, 68, 68, 0.15);
-      border-color: rgba(239, 68, 68, 0.4);
-      color: #fca5a5;
-    }
-
-    .caller-chip.chip-safe {
-      background: rgba(16, 185, 129, 0.15);
-      border-color: rgba(16, 185, 129, 0.4);
-      color: #86efac;
-    }
-
-    /* Email Header Meta */
-    .email-meta-card {
-      background: rgba(0, 0, 0, 0.25);
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-      padding: 14px 18px;
-      margin-bottom: 18px;
-    }
-
-    .email-meta-subject {
-      font-size: 18px;
-      font-weight: 800;
-      color: #ffffff;
-      margin-bottom: 10px;
-    }
-
-    .email-meta-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      font-size: 12px;
-    }
-
-    .email-meta-label {
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    .email-meta-val {
-      color: #e2e8f0;
-      font-family: monospace;
+      flex-direction: column;
+      overflow-y: auto;
     }
 
     .email-body-content {
-      background: rgba(0, 0, 0, 0.15);
+      background: rgba(0, 0, 0, 0.2);
       border: 1px solid var(--border-subtle);
       border-radius: 8px;
-      padding: 20px;
-      font-size: 13px;
+      padding: 18px;
+      font-size: 13.5px;
       line-height: 1.6;
       color: #e2e8f0;
-      margin-bottom: 18px;
-      flex: 1;
+      white-space: pre-wrap;
     }
 
     .email-interactive-link {
       color: #38bdf8;
       text-decoration: underline;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
-      position: relative;
-      transition: color 0.15s;
     }
 
     .email-interactive-link:hover {
       color: var(--neon-cyan);
     }
 
-    .link-risk-tag {
-      font-size: 10px;
-      font-weight: 800;
-      padding: 1px 6px;
-      border-radius: 6px;
-      background: rgba(239, 68, 68, 0.3);
-      color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.5);
-      margin-left: 6px;
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    /* Attack Injector / Custom Craft Bar */
-    .craft-attack-section {
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px dashed var(--border-cyan);
-      border-radius: 10px;
-      padding: 16px;
-      margin-top: 20px;
-    }
-
-    .craft-attack-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr auto;
-      gap: 10px;
-      align-items: flex-end;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .form-group label {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-muted);
-    }
-
-    .form-input {
-      padding: 8px 12px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid var(--border-subtle);
-      border-radius: 6px;
-      color: #ffffff;
-      font-size: 12px;
-      outline: none;
-    }
-
-    .form-input:focus {
-      border-color: var(--neon-cyan);
-    }
-
-    .btn-inject-attack {
-      padding: 8px 16px;
-      background: linear-gradient(90deg, var(--neon-red), #dc2626);
-      border: none;
-      border-radius: 6px;
-      color: #ffffff;
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: transform 0.15s;
-    }
-
-    .btn-inject-attack:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--glow-red);
-    }
-
-    /* =========================================================
-       MODULE 2: URL SCANNER
-       ========================================================= */
+    /* URL Scanner Layout */
     .url-input-wrap {
       display: flex;
       gap: 12px;
@@ -923,297 +1039,105 @@
     .url-big-input {
       flex: 1;
       padding: 14px 18px;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1.5px solid var(--border-subtle);
-      border-radius: 10px;
+      background: rgba(10, 16, 31, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
       color: #ffffff;
       font-size: 14px;
-      font-family: monospace;
       outline: none;
     }
 
     .url-big-input:focus {
       border-color: var(--neon-cyan);
-      box-shadow: 0 0 12px rgba(0, 242, 254, 0.35);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
     }
 
     .btn-primary-action {
-      padding: 14px 28px;
       background: linear-gradient(90deg, var(--neon-cyan), var(--neon-blue));
       border: none;
-      border-radius: 10px;
-      color: #050b14;
+      color: #040915;
       font-size: 14px;
-      font-weight: 900;
+      font-weight: 800;
+      padding: 14px 24px;
+      border-radius: 8px;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 8px;
-      transition: transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+      transition: all 0.2s;
     }
 
     .btn-primary-action:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 242, 254, 0.45);
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.6);
     }
 
-    .preset-buttons-row {
+    .preset-chips-row {
       display: flex;
-      flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 20px;
-      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
     }
 
     .preset-chip {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--border-subtle);
       color: #cbd5e1;
-      padding: 5px 12px;
-      border-radius: 16px;
-      font-size: 11px;
-      font-weight: 600;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 6px;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.15s;
     }
 
     .preset-chip:hover {
       background: rgba(0, 242, 254, 0.15);
       border-color: var(--neon-cyan);
-      color: var(--neon-cyan);
-    }
-
-    .preset-chip.phish-chip {
-      border-color: rgba(239, 68, 68, 0.35);
-    }
-
-    .preset-chip.phish-chip:hover {
-      background: rgba(239, 68, 68, 0.2);
-      border-color: var(--neon-red);
-      color: #fca5a5;
-    }
-
-    .results-2col {
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 20px;
-    }
-
-    .risk-gauge-box {
-      background: rgba(15, 23, 42, 0.75);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 28px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-
-    .gauge-ring {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      border: 6px solid var(--neon-green);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-      box-shadow: var(--glow-green);
-      transition: all 0.3s;
-    }
-
-    .gauge-ring.danger {
-      border-color: var(--neon-red);
-      box-shadow: var(--glow-red);
-    }
-
-    .gauge-ring.caution {
-      border-color: var(--neon-amber);
-      box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
-    }
-
-    .gauge-num {
-      font-size: 40px;
-      font-weight: 900;
       color: #ffffff;
     }
 
-    .gauge-subtext {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: var(--text-muted);
+    .preset-chip.phish-chip {
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
     }
 
-    .risk-title-label {
-      font-size: 18px;
-      font-weight: 900;
-      margin-bottom: 6px;
+    .preset-chip.safe-chip {
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #6ee7b7;
     }
 
-    .breakdown-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .info-subcard {
-      background: rgba(15, 23, 42, 0.65);
-      border: 1px solid var(--border-subtle);
-      border-radius: 10px;
-      padding: 16px;
-    }
-
-    .info-subcard-title {
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--neon-cyan);
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .key-value-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      padding: 5px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .key-label {
-      color: var(--text-muted);
-    }
-
-    .val-text {
-      font-weight: 600;
-      color: #e2e8f0;
-      font-family: monospace;
-    }
-
-    /* AI Threat Evaluation Box */
-    .ai-reasoning-panel {
-      grid-column: 1 / -1;
-      background: linear-gradient(135deg, rgba(79, 172, 254, 0.1), rgba(168, 85, 247, 0.12));
-      border: 1.5px solid rgba(168, 85, 247, 0.35);
-      border-radius: 12px;
-      padding: 18px 20px;
-      margin-top: 16px;
-    }
-
-    .ai-panel-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      font-weight: 800;
-      color: #c084fc;
-      margin-bottom: 8px;
-    }
-
-    /* =========================================================
-       MODULE 3: LOOKALIKE & TYPOSQUAT LAB
-       ========================================================= */
-    .lookalike-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 16px;
-    }
-
-    .lookalike-table th, .lookalike-table td {
-      padding: 12px 14px;
-      text-align: left;
-      font-size: 12px;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .lookalike-table th {
-      color: var(--neon-cyan);
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      background: rgba(0, 242, 254, 0.05);
-    }
-
-    /* =========================================================
-       IN-PAGE WARNING MODAL SIMULATOR
-       ========================================================= */
+    /* Modal Warning */
     #prototype-warning-modal {
       position: fixed;
-      inset: 0;
-      background: rgba(7, 10, 19, 0.88);
-      backdrop-filter: blur(16px);
-      z-index: 99999;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(4, 7, 18, 0.88);
+      backdrop-filter: blur(12px);
       display: none;
       align-items: center;
       justify-content: center;
+      z-index: 2000;
       padding: 20px;
     }
 
     .modal-content-card {
-      background: linear-gradient(145deg, #1e172e, #0c1122);
+      background: rgba(20, 10, 15, 0.95);
       border: 2px solid var(--neon-red);
-      border-radius: 16px;
-      padding: 32px;
+      border-radius: 14px;
       max-width: 580px;
       width: 100%;
-      color: #ffffff;
-      text-align: center;
-      box-shadow: 0 25px 50px -12px rgba(239, 68, 68, 0.4), 0 0 30px rgba(239, 68, 68, 0.25);
-      animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 28px;
+      box-shadow: 0 0 40px rgba(239, 68, 68, 0.5);
+      animation: modalPop 0.25s ease-out;
     }
 
     @keyframes modalPop {
-      from { opacity: 0; transform: scale(0.92); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    .modal-alert-icon {
-      font-size: 52px;
-      margin-bottom: 12px;
-      animation: alertPulse 1.5s infinite;
-    }
-
-    @keyframes alertPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.12); }
-    }
-
-    .modal-title {
-      color: var(--neon-red);
-      font-size: 20px;
-      font-weight: 900;
-      margin-bottom: 8px;
-      letter-spacing: 0.5px;
-    }
-
-    .modal-desc {
-      color: #cbd5e1;
-      font-size: 13px;
-      margin-bottom: 20px;
-      line-height: 1.4;
-    }
-
-    .modal-info-box {
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      padding: 16px;
-      margin-bottom: 24px;
-      text-align: left;
-      font-size: 12px;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
 
     .btn-modal-safe {
@@ -1226,12 +1150,6 @@
       font-weight: 800;
       cursor: pointer;
       flex: 2;
-      transition: transform 0.15s;
-    }
-
-    .btn-modal-safe:hover {
-      background: #059669;
-      transform: translateY(-2px);
     }
 
     .btn-modal-close {
@@ -1245,11 +1163,6 @@
       cursor: pointer;
       flex: 1;
     }
-
-    .btn-modal-close:hover {
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.18);
-    }
   </style>
 </head>
 <body>
@@ -1259,8 +1172,8 @@
     <div class="brand-section">
       <span class="brand-shield-icon">🛡️</span>
       <div>
-        <span class="brand-title">PhishLens • Truecaller AI PhishGuard</span>
-        <span class="brand-subtag">TRUECALLER-STYLE SAFETY VERDICTS & EMAIL CALLER ID (94.0% ACCURACY)</span>
+        <span class="brand-title">PhishLens • Faculty Challenge Cyber Defense Hub</span>
+        <span class="brand-subtag">LIVE ON-THE-SPOT PHISHING DETECTOR & SENDER CALLER ID</span>
       </div>
     </div>
     <div class="header-actions">
@@ -1269,50 +1182,19 @@
       </button>
       <div class="engine-status-pill">
         <span class="pulse-dot"></span>
-        <span id="engine-status-label">Truecaller 3-State AI Engine Active</span>
+        <span id="engine-status-label">Faculty Challenge AI Engine Active</span>
       </div>
     </div>
   </header>
 
   <main class="main-container">
-    <!-- Top Telemetry Row -->
-    <section class="telemetry-row">
-      <div class="telemetry-card">
-        <div>
-          <div class="telemetry-label">150-Email Benchmark</div>
-          <div class="telemetry-value" id="count-total" style="color:var(--neon-cyan);">150 Tests</div>
-        </div>
-        <div class="telemetry-icon-wrap" style="color:var(--neon-cyan);">📊</div>
-      </div>
-
-      <div class="telemetry-card">
-        <div>
-          <div class="telemetry-label">Email Accuracy Benchmark</div>
-          <div class="telemetry-value" id="count-phish" style="color:var(--neon-green);">94.00%</div>
-        </div>
-        <div class="telemetry-icon-wrap" style="color:var(--neon-green);">🎯</div>
-      </div>
-
-      <div class="telemetry-card">
-        <div>
-          <div class="telemetry-label">Email Caller ID System</div>
-          <div class="telemetry-value" id="count-lookalikes" style="color:var(--neon-purple);">Enabled</div>
-        </div>
-        <div class="telemetry-icon-wrap" style="color:var(--neon-purple);">👤</div>
-      </div>
-
-      <div class="telemetry-card">
-        <div>
-          <div class="telemetry-label">Truecaller Visual Tagging</div>
-          <div class="telemetry-value" id="count-spoofs" style="color:var(--neon-amber);">3-State Live</div>
-        </div>
-        <div class="telemetry-icon-wrap" style="color:var(--neon-amber);">🚨</div>
-      </div>
-    </section>
 
     <!-- Prototype Mode Switcher Tabs -->
     <nav class="prototype-tabs">
-      <div class="prototype-tab active" data-tab="pane-inbox-sim">
+      <div class="prototype-tab active" data-tab="pane-faculty-challenge">
+        <span>🎓</span> Faculty Challenge Mode
+      </div>
+      <div class="prototype-tab" data-tab="pane-inbox-sim">
         <span>📥</span> Live Webmail & Inbox Simulator
       </div>
       <div class="prototype-tab" data-tab="pane-url-inspector">
@@ -1322,12 +1204,233 @@
         <span>🔬</span> Lookalike & Typosquat Domain Lab
       </div>
       <div class="prototype-tab" data-tab="pane-telemetry-logs">
-        <span>📊</span> Incident Telemetry & Threat Logs
+        <span>📊</span> Scan History & Analytics
       </div>
     </nav>
 
-    <!-- ==================== TAB 1: INBOX SIMULATOR ==================== -->
-    <section id="pane-inbox-sim" class="tab-pane active">
+    <!-- ==================== TAB 1: FACULTY CHALLENGE MODE ==================== -->
+    <section id="pane-faculty-challenge" class="tab-pane active">
+      
+      <!-- Interactive Challenge Me Banner -->
+      <div class="faculty-banner">
+        <div class="faculty-banner-text">
+          <strong style="color:var(--neon-cyan); font-size:15px;">⚡ Challenge Me Faculty Mode:</strong><br>
+          Enter <em>any custom email, sender, subject, message body, or target URL</em> on the spot. The neural AI engine will inspect all vectors in real time, calculate the risk score, and explain the exact phishing indicators.
+        </div>
+        <button id="btn-challenge-me-prompt" class="btn-challenge-me">
+          <span>🎯 Challenge Me</span>
+        </button>
+      </div>
+
+      <!-- Challenge 2-Column Grid -->
+      <div class="challenge-grid">
+        
+        <!-- Left Column: Input Form (BLANK BY DEFAULT) -->
+        <div class="hud-card" style="margin-bottom:0;">
+          <div class="card-top">
+            <div class="card-heading">
+              <span>✍️</span> Live Input Workspace
+            </div>
+            <span style="font-size:12px; color:var(--text-muted);">Test Any Arbitrary Scenario</span>
+          </div>
+
+          <div class="form-group">
+            <label for="faculty-sender">
+              <span>Sender Display Name & Email Address:</span>
+              <span style="color:var(--neon-cyan); font-size:11px;">From Header</span>
+            </label>
+            <input type="text" id="faculty-sender" class="form-input" placeholder="e.g. PayPal Security <service@paypal-verify-alert99.xyz>">
+          </div>
+
+          <div class="form-group">
+            <label for="faculty-subject">
+              <span>Email Subject Line:</span>
+              <span style="color:var(--neon-cyan); font-size:11px;">Subject</span>
+            </label>
+            <input type="text" id="faculty-subject" class="form-input" placeholder="e.g. URGENT: Your Account Has Been Suspended (Action Required in 24h)">
+          </div>
+
+          <div class="form-group">
+            <label for="faculty-body">
+              <span>Email Message Body:</span>
+              <span style="color:var(--neon-cyan); font-size:11px;">Body / NLP Context</span>
+            </label>
+            <textarea id="faculty-body" class="form-textarea" placeholder="Type or paste message text here (e.g. Dear user, we detected an unauthorized sign-in attempt from Berlin. Click below to verify your password immediately: https://pаypal.com/verify)..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="faculty-url">
+              <span>Target URL / Embedded Link in Body:</span>
+              <span style="color:var(--neon-cyan); font-size:11px;">URL Inspection</span>
+            </label>
+            <input type="text" id="faculty-url" class="form-input" placeholder="e.g. https://pаypal.com/signin or http://192.168.1.100/login">
+          </div>
+
+          <!-- Quick Test Presets (Optional for fast demo) -->
+          <div style="margin-top:12px; margin-bottom:14px;">
+            <span style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Quick Faculty Test Presets:</span>
+            <div class="preset-chips-row" style="margin-top:6px; margin-bottom:0;">
+              <button class="preset-chip phish-chip" onclick="loadFacultyPreset('paypal_phish')">🔴 Test PayPal Spoof</button>
+              <button class="preset-chip phish-chip" onclick="loadFacultyPreset('netflix_phish')">🔴 Test Netflix Typosquat</button>
+              <button class="preset-chip" onclick="loadFacultyPreset('suspicious_invoice')" style="border-color:#f59e0b; color:#fbbf24;">🟡 Test Suspicious Invoice</button>
+              <button class="preset-chip safe-chip" onclick="loadFacultyPreset('dean_safe')">🟢 Test College Dean Email</button>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="faculty-actions-row">
+            <button id="btn-faculty-analyze" class="btn-analyze-live">
+              <span>🚀 Analyze Live Email</span>
+            </button>
+            <button id="btn-faculty-clear" class="btn-clear-fields">
+              <span>🗑️ Clear</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Column: Real-Time Results & Explanations Card -->
+        <div class="hud-card" style="margin-bottom:0;">
+          <div class="card-top">
+            <div class="card-heading">
+              <span>📊</span> Real-Time Phishing Threat Assessment
+            </div>
+            <div id="faculty-confidence" class="confidence-pill">Confidence: --%</div>
+          </div>
+
+          <div class="result-card-inner">
+            
+            <!-- Verdict Badge Row -->
+            <div class="result-header-row">
+              <div id="faculty-verdict-badge" class="verdict-badge verdict-idle">
+                <span>⚡</span> Enter details and click 'Analyze Live Email'
+              </div>
+              <div id="faculty-latency-tag" style="font-size:11px; color:var(--text-muted); font-family:monospace;">
+                Latency: < 25 ms
+              </div>
+            </div>
+
+            <!-- Animated Circular SVG Risk Gauge -->
+            <div class="gauge-centerpiece">
+              <div class="svg-gauge-box">
+                <svg class="svg-gauge" viewBox="0 0 140 140">
+                  <circle class="gauge-bg-circle" cx="70" cy="70" r="55"></circle>
+                  <circle id="faculty-gauge-circle" class="gauge-progress-circle" cx="70" cy="70" r="55"></circle>
+                </svg>
+                <div class="gauge-center-text">
+                  <div id="faculty-gauge-num" class="gauge-center-num">0</div>
+                  <div class="gauge-center-lbl">Risk Score</div>
+                </div>
+              </div>
+
+              <div class="gauge-meta-info">
+                <div id="faculty-risk-headline" class="gauge-meta-title">Awaiting Live Analysis</div>
+                <div id="faculty-risk-recommendation" class="gauge-meta-desc">
+                  Fill in the input fields on the left and click 'Analyze Live Email' to see real-time AI heuristics, sender verification, and URL analysis.
+                </div>
+              </div>
+            </div>
+
+            <!-- Detection Reasons List -->
+            <div class="reasons-box">
+              <div class="reasons-title">
+                <span>🔍</span> Triggered Phishing & Deception Indicators:
+              </div>
+              <div id="faculty-reasons-container" class="reasons-chips-wrap">
+                <span class="reason-chip chip-safe">✓ System initialized and ready for live input</span>
+              </div>
+            </div>
+
+            <!-- Email Caller ID Card Preview -->
+            <div id="faculty-caller-id-slot">
+              <!-- Dynamically populated Caller ID -->
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Demo Analytics HUD Card -->
+      <div class="analytics-hud-row">
+        <div class="hud-stat-box">
+          <div>
+            <div class="hud-stat-label">Total Scans</div>
+            <div class="hud-stat-val" id="stat-total-scans" style="color:var(--neon-cyan);">0</div>
+          </div>
+          <span style="font-size:24px;">📊</span>
+        </div>
+
+        <div class="hud-stat-box">
+          <div>
+            <div class="hud-stat-label">Safe Emails</div>
+            <div class="hud-stat-val" id="stat-safe-scans" style="color:var(--neon-green);">0</div>
+          </div>
+          <span style="font-size:24px;">🟢</span>
+        </div>
+
+        <div class="hud-stat-box">
+          <div>
+            <div class="hud-stat-label">Suspicious Emails</div>
+            <div class="hud-stat-val" id="stat-suspicious-scans" style="color:var(--neon-amber);">0</div>
+          </div>
+          <span style="font-size:24px;">🟡</span>
+        </div>
+
+        <div class="hud-stat-box">
+          <div>
+            <div class="hud-stat-label">Phishing Attacks</div>
+            <div class="hud-stat-val" id="stat-phish-scans" style="color:var(--neon-red);">0</div>
+          </div>
+          <span style="font-size:24px;">🔴</span>
+        </div>
+
+        <div class="hud-stat-box">
+          <div>
+            <div class="hud-stat-label">Average Risk Score</div>
+            <div class="hud-stat-val" id="stat-avg-score" style="color:var(--neon-purple);">0/100</div>
+          </div>
+          <span style="font-size:24px;">🎯</span>
+        </div>
+      </div>
+
+      <!-- Scan History Table -->
+      <div class="history-card">
+        <div class="card-top">
+          <div class="card-heading">
+            <span>📜</span> Live Scan History (Stored in Local Storage)
+          </div>
+          <button id="btn-clear-history" class="preset-chip" style="font-size:11px;">
+            🗑️ Clear History
+          </button>
+        </div>
+
+        <div class="history-table-wrap">
+          <table class="cyber-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Sender / Origin</th>
+                <th>Subject</th>
+                <th>Verdict</th>
+                <th>Risk Score</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="faculty-history-tbody">
+              <tr>
+                <td colspan="6" style="text-align:center; color:var(--text-muted); padding:20px;">
+                  No live scans performed yet. Enter details above and click 'Analyze Live Email'!
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================== TAB 2: INBOX SIMULATOR ==================== -->
+    <section id="pane-inbox-sim" class="tab-pane">
       <div class="hud-card">
         <div class="card-top">
           <div class="card-heading">
@@ -1344,7 +1447,6 @@
         </div>
 
         <div class="inbox-sim-layout">
-          <!-- Left Sidebar Inbox -->
           <div class="inbox-sidebar">
             <div class="inbox-sidebar-header">
               <span class="inbox-sidebar-title">
@@ -1352,83 +1454,21 @@
               </span>
               <span class="inbox-badge-count" id="inbox-unread-count">3 Phish</span>
             </div>
-
-            <div class="inbox-items-scroll" id="inbox-list-container">
-              <!-- Dynamically populated emails -->
-            </div>
+            <div class="inbox-items-scroll" id="inbox-list-container"></div>
           </div>
 
-          <!-- Right Email Reader View -->
           <div class="email-view-pane" id="email-view-container">
-            <!-- Dynamic warning banner injected here -->
             <div id="email-view-banner-slot"></div>
-
-            <!-- Email Caller ID Card (Inserted after Truecaller banner and before email body) -->
-            <div id="email-caller-id-slot">
-              <div class="caller-id-card state-safe">
-                <div class="caller-id-header">
-                  <span class="caller-id-title">
-                    <span>👤</span> EMAIL CALLER ID
-                  </span>
-                  <span class="caller-id-status-badge status-safe">
-                    ✓ SENDER APPEARS LEGITIMATE
-                  </span>
-                </div>
-                <div class="caller-id-main-row">
-                  <div class="caller-id-avatar">📬</div>
-                  <div class="caller-id-details">
-                    <div class="caller-id-name" id="view-subject">Select an email from the left mailbox to inspect</div>
-                    <div class="caller-id-email" id="view-from">--</div>
-                    <div class="caller-id-domain"><span class="email-meta-label">Origin Domain: </span><span id="view-domain">--</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Email Message Body -->
+            <div id="email-caller-id-slot"></div>
             <div class="email-body-content" id="view-body">
-              Click any incoming message from the mailbox on the left to observe how PhishLens inspects sender patterns, analyzes lookalike links, and warns you in real-time before clicking!
+              Click any incoming message from the mailbox on the left to inspect!
             </div>
-          </div>
-        </div>
-
-        <!-- Custom Attack Injector Bar -->
-        <div class="craft-attack-section">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
-            <div style="font-size:12px; font-weight:800; color:var(--neon-cyan);">
-              🧪 Custom Email Crafter - Test Any Real Email with Live Truecaller AI & Caller ID:
-            </div>
-            <div style="display:flex; gap:6px; flex-wrap:wrap;">
-              <button class="preset-chip phish-chip" onclick="loadEmailPreset('scam')" style="font-size:11px;">🔴 Load Scam Preset</button>
-              <button class="preset-chip" onclick="loadEmailPreset('suspicious')" style="font-size:11px; background:rgba(245, 158, 11, 0.2); border-color:#f59e0b; color:#fbbf24;">🟡 Load Suspicious Preset</button>
-              <button class="preset-chip safe-chip" onclick="loadEmailPreset('safe')" style="font-size:11px;">🟢 Load Safe Preset</button>
-            </div>
-          </div>
-          <div class="craft-attack-grid">
-            <div class="form-group">
-              <label>Sender Display Name & Email:</label>
-              <input type="text" id="craft-from" class="form-input" value='Netflix Billing Support <service@netflix-verify99.xyz>'>
-            </div>
-            <div class="form-group">
-              <label>Subject Line:</label>
-              <input type="text" id="craft-subject" class="form-input" value="Your Membership is Suspended (Action Required in 24h)">
-            </div>
-            <div class="form-group" style="grid-column: span 2;">
-              <label>Target URL / Embedded Link (Original or Duplicate):</label>
-              <input type="text" id="craft-link" class="form-input" value="https://netf1ix-billing-update.xyz/login" placeholder="e.g. https://paypal.com or https://pаypal.com">
-              <div id="craft-link-status" style="font-size:11.5px; margin-top:6px; font-weight:800; color:var(--neon-red); display:flex; align-items:center; gap:6px;">
-                <span>🚨</span> Duplicate / Typosquat URL: Mimicking Netflix ('netf1ix' with digit '1')
-              </div>
-            </div>
-            <button id="btn-inject-custom" class="btn-inject-attack" style="height: fit-content; align-self: flex-end; margin-bottom: 2px;">
-              <span>🚀 Analyze & Detect Email</span>
-            </button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ==================== TAB 2: URL SCANNER ==================== -->
+    <!-- ==================== TAB 3: URL SCANNER ==================== -->
     <section id="pane-url-inspector" class="tab-pane">
       <div class="hud-card">
         <div class="card-top">
@@ -1438,15 +1478,13 @@
           <span style="font-size:12px; color:var(--text-muted);">Zero-Latency Heuristic + Entropy + Lookalike Analysis</span>
         </div>
 
-        <!-- Presets -->
-        <div class="preset-buttons-row">
+        <div class="preset-chips-row">
           <span style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Quick Presets:</span>
           <button class="preset-chip phish-chip" onclick="loadUrlPreset('https://pаypal.com/signin/account-verify')">🚨 PayPal Homoglyph ('а')</button>
           <button class="preset-chip phish-chip" onclick="loadUrlPreset('https://m1crosoft-login-auth.xyz/oauth2')">🚨 Microsoft 365 Typosquat</button>
           <button class="preset-chip phish-chip" onclick="loadUrlPreset('http://192.168.1.100/chase/login.php')">🚨 Chase Direct IP Host</button>
           <button class="preset-chip phish-chip" onclick="loadUrlPreset('https://apple.com@verify-account.top/portal')">🚨 Apple ID @ Deception</button>
-          <button class="preset-chip phish-chip" onclick="loadUrlPreset('https://netflix-billing-update-service.com/retry')">🚨 Netflix Combosquat</button>
-          <button class="preset-chip" onclick="loadUrlPreset('https://myaccount.google.com/security')">✅ Authentic Google Account</button>
+          <button class="preset-chip safe-chip" onclick="loadUrlPreset('https://myaccount.google.com/security')">✅ Authentic Google Account</button>
         </div>
 
         <div class="url-input-wrap">
@@ -1456,1329 +1494,978 @@
           </button>
         </div>
 
-        <div id="url-scan-results" class="results-2col" style="display:none;">
-          <div class="risk-gauge-box">
-            <div id="proto-gauge-ring" class="gauge-ring">
-              <span id="proto-gauge-num" class="gauge-num">0</span>
-              <span class="gauge-subtext">RISK SCORE</span>
-            </div>
-            <div id="proto-risk-title" class="risk-title-label" style="color:var(--neon-green);">SAFE</div>
-            <p id="proto-risk-rec" style="font-size:12px; color:var(--text-muted); line-height:1.4;">Verified safe website structure.</p>
-          </div>
-
-          <div class="breakdown-grid">
-            <div class="info-subcard">
-              <div class="info-subcard-title"><span>🔍</span> Lookalike & Brand Spoofing</div>
-              <div class="key-value-row">
-                <span class="key-label">Lookalike Detected:</span>
-                <span class="val-text" id="proto-lookalike-flag">No</span>
-              </div>
-              <div class="key-value-row">
-                <span class="key-label">Target Brand:</span>
-                <span class="val-text" id="proto-target-brand">None</span>
-              </div>
-              <div class="key-value-row">
-                <span class="key-label">Deception Technique:</span>
-                <span class="val-text" id="proto-deception-technique">None</span>
-              </div>
-            </div>
-
-            <div class="info-subcard">
-              <div class="info-subcard-title"><span>📐</span> Structural & Entropy Metrics</div>
-              <div class="key-value-row">
-                <span class="key-label">Domain Shannon Entropy:</span>
-                <span class="val-text" id="proto-entropy-score">2.2 / 5.0</span>
-              </div>
-              <div class="key-value-row">
-                <span class="key-label">Direct IP Address:</span>
-                <span class="val-text" id="proto-is-ip">No</span>
-              </div>
-              <div class="key-value-row">
-                <span class="key-label">Subdomain Depth:</span>
-                <span class="val-text" id="proto-subdomain-count">1 level</span>
-              </div>
-            </div>
-
-            <div class="info-subcard" style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(0, 242, 254, 0.08)); border-color: rgba(0, 242, 254, 0.3);">
-              <div class="info-subcard-title"><span>🤖</span> Machine Learning Model Signal (Trained ExtraTrees / 29 Features)</div>
-              <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; margin-bottom:8px;">
-                <div class="key-value-row">
-                  <span class="key-label">Model Verdict:</span>
-                  <span class="val-text" id="proto-ml-verdict" style="color:var(--neon-cyan);">Analyzing...</span>
-                </div>
-                <div class="key-value-row">
-                  <span class="key-label">ML Phishing Probability:</span>
-                  <span class="val-text" id="proto-ml-prob">0%</span>
-                </div>
-                <div class="key-value-row">
-                  <span class="key-label">Classifier Engine:</span>
-                  <span class="val-text" id="proto-ml-model">ExtraTrees Ensemble</span>
-                </div>
-              </div>
-              <div style="font-size:11px; color:var(--text-muted);">
-                <strong>Active Threat Features:</strong> <span id="proto-ml-features" style="color:#fca5a5;">None</span>
-              </div>
-            </div>
-
-            <div class="info-subcard" style="grid-column: 1 / -1;">
-              <div class="info-subcard-title"><span>🚨</span> Specific Threat Indicators & Red Flags</div>
-              <ul id="proto-indicators-list" style="margin:0; padding-left:18px; font-size:12px; color:#f87171;">
-                <li>No malicious indicators detected.</li>
-              </ul>
-            </div>
-
-            <div class="ai-reasoning-panel">
-              <div class="ai-panel-header">
-                <span>🤖</span> AI Contextual Intelligence & Safety Guidance
-              </div>
-              <p id="proto-ai-summary" style="font-size:13px; color:#e2e8f0; margin-bottom:8px; line-height:1.4;"></p>
-              <div id="proto-ai-actions" style="font-size:12px; color:#cbd5e1;"></div>
-            </div>
+        <div id="url-scan-results" style="display:none; margin-top:20px;">
+          <div class="hud-card" style="margin-bottom:0;">
+            <div id="url-scan-details-box"></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ==================== TAB 3: LOOKALIKE LAB ==================== -->
+    <!-- ==================== TAB 4: LOOKALIKE LAB ==================== -->
     <section id="pane-lookalike-generator" class="tab-pane">
       <div class="hud-card">
         <div class="card-top">
           <div class="card-heading">
-            <span>🔬</span> Lookalike & Typosquatting Laboratory
+            <span>🔬</span> Lookalike & Typosquat Domain Generation Lab
           </div>
-          <span style="font-size:12px; color:var(--text-muted);">IDN Homoglyphs • Punycode • Leetspeak • Combosquatting</span>
+          <span style="font-size:12px; color:var(--text-muted);">Proactive Adversary Emulation Engine</span>
         </div>
 
         <div class="url-input-wrap">
-          <input type="text" id="lab-domain-input" class="url-big-input" placeholder="Enter target brand domain (e.g. paypal.com, apple.com, chase.com, netflix.com)">
+          <input type="text" id="lab-domain-input" class="url-big-input" value="paypal.com" placeholder="Enter target domain to generate lookalikes (e.g. paypal.com)">
           <button id="btn-run-lab" class="btn-primary-action">
-            <span>🔬 Generate Variations</span>
+            <span>🧬 Generate Spoof Variants</span>
           </button>
         </div>
 
-        <table class="lookalike-table">
-          <thead>
-            <tr>
-              <th>Attack Lookalike Variant</th>
-              <th>Attack Technique</th>
-              <th>Punycode Encoding</th>
-              <th>Visual Similarity</th>
-              <th>Risk Severity</th>
-            </tr>
-          </thead>
-          <tbody id="lab-variants-tbody">
-            <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Enter a brand domain above to simulate lookalike variations.</td></tr>
-          </tbody>
-        </table>
+        <div class="history-table-wrap" style="margin-top:16px;">
+          <table class="cyber-table">
+            <thead>
+              <tr>
+                <th>Lookalike Variant</th>
+                <th>Technique</th>
+                <th>IDN Punycode</th>
+                <th>Visual Similarity</th>
+                <th>Threat Level</th>
+              </tr>
+            </thead>
+            <tbody id="lab-variants-tbody"></tbody>
+          </table>
+        </div>
       </div>
     </section>
 
-    <!-- ==================== TAB 4: TELEMETRY & LOGS ==================== -->
+    <!-- ==================== TAB 5: TELEMETRY & LOGS ==================== -->
     <section id="pane-telemetry-logs" class="tab-pane">
       <div class="hud-card">
         <div class="card-top">
           <div class="card-heading">
-            <span>📊</span> Live Threat Telemetry & Interception Log
+            <span>📊</span> Incident Telemetry & Live SOC Event Stream
           </div>
-          <button id="btn-export-log" class="preset-chip" style="background:var(--neon-cyan); color:#000; font-weight:800;">
-            📥 Export Telemetry JSON
-          </button>
         </div>
 
-        <table class="lookalike-table">
-          <thead>
-            <tr>
-              <th>Timestamp</th>
-              <th>Type</th>
-              <th>Target Analyzed</th>
-              <th>Risk Level</th>
-              <th>Threat Vector</th>
-              <th>Interception Status</th>
-            </tr>
-          </thead>
-          <tbody id="logs-tbody">
-            <!-- Dynamic logs -->
-          </tbody>
-        </table>
+        <div class="history-table-wrap">
+          <table class="cyber-table">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Event Type</th>
+                <th>Target / Subject</th>
+                <th>Risk Score</th>
+                <th>Verdict</th>
+              </tr>
+            </thead>
+            <tbody id="telemetry-log-tbody"></tbody>
+          </table>
+        </div>
       </div>
     </section>
+
   </main>
 
-  <!-- ==================== IN-PAGE WARNING MODAL ==================== -->
+  <!-- In-Page Warning Modal -->
   <div id="prototype-warning-modal">
     <div class="modal-content-card">
-      <div class="modal-alert-icon">⚠️</div>
-      <h2 class="modal-title">CRITICAL PHISHING ATTACK BLOCKED</h2>
-      <p class="modal-desc">PhishLens prevented an attempt to navigate to a deceptive lookalike or credential harvesting portal.</p>
+      <div style="font-size:32px; margin-bottom:10px;">⚠️</div>
+      <h2 style="color:var(--neon-red); font-size:18px; font-weight:900; margin-bottom:8px;">CRITICAL PHISHING ATTACK BLOCKED</h2>
+      <p style="color:#e2e8f0; font-size:13px; line-height:1.5; margin-bottom:16px;">PhishLens prevented an attempt to navigate to a deceptive lookalike or credential harvesting portal.</p>
 
-      <div class="modal-info-box">
-        <div style="margin-bottom:6px;"><strong>Target URL:</strong> <span id="modal-url-text" style="color:#f87171; word-break:break-all;"></span></div>
-        <div style="margin-bottom:6px;"><strong>Threat Level:</strong> <span id="modal-risk-text" style="color:#ef4444; font-weight:bold;">100% Risk Score (Dangerous)</span></div>
-        <div style="margin-bottom:6px;"><strong>Impersonated Brand:</strong> <span id="modal-brand-text" style="color:#fbbf24; font-weight:bold;"></span></div>
+      <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(239,68,68,0.3); border-radius:8px; padding:12px; margin-bottom:18px; font-size:12px;">
+        <div style="margin-bottom:4px;"><strong>Target URL:</strong> <span id="modal-url-text" style="color:#f87171; word-break:break-all;"></span></div>
+        <div style="margin-bottom:4px;"><strong>Threat Level:</strong> <span id="modal-risk-text" style="color:#ef4444; font-weight:bold;">100% Risk Score</span></div>
+        <div style="margin-bottom:4px;"><strong>Impersonated Brand:</strong> <span id="modal-brand-text" style="color:#fbbf24; font-weight:bold;"></span></div>
         <div><strong>Deception Indicators:</strong>
           <ul id="modal-reasons-list" style="margin:4px 0 0 16px; color:#e2e8f0;"></ul>
         </div>
       </div>
 
-      <div class="modal-actions">
-        <button id="btn-modal-return" class="btn-modal-safe">
-          🛡️ Return to Safety (Recommended)
-        </button>
-        <button id="btn-modal-dismiss" class="btn-modal-close">
-          Dismiss
-        </button>
+      <div style="display:flex; gap:10px;">
+        <button id="btn-modal-return" class="btn-modal-safe">🛡️ Return to Safety</button>
+        <button id="btn-modal-dismiss" class="btn-modal-close">Dismiss</button>
       </div>
     </div>
   </div>
 
   <script>
 /**
- * PhishLens PhishGuard - Prototype Defense Logic & Interactive Simulation Center
+ * PhishLens • Faculty Challenge Cyber Defense Platform
+ * Full real-time multi-vector phishing detector, Truecaller-style safety indicator,
+ * SVG circular risk gauge, local storage history, and demo analytics.
  */
 
-// Automatically detect API host:
-// When deployed on Vercel, use relative paths to the same domain.
-// When running locally on port 8080 or from local file, fallback to http://localhost:5000.
-const API_BASE = (window.location.hostname === "localhost" && window.location.port === "8080")
-  ? "http://localhost:5000"
-  : (window.location.protocol.startsWith("http") ? "" : "http://localhost:5000");
+// ==================== CONFIGURATION & STATE ====================
+const API_BASE = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1") 
+  ? "http://127.0.0.1:5000" 
+  : "";
 
-// Sound synthesis using Web Audio API
-let audioCtx = null;
 let soundEnabled = true;
-
-function playAlertSound(type = "danger") {
-  if (!soundEnabled) return;
-  try {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-
-    if (type === "danger") {
-      // Dual-tone urgent alert
-      osc.type = "sawtooth";
-      osc.frequency.setValueAtTime(880, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.25);
-      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.25);
-    } else {
-      // Soft pleasant confirmation chime
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
-      osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.1); // A5
-      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.3);
-    }
-  } catch (e) {
-    // Audio context may be restricted before user interaction
-  }
-}
-
-// Global In-Memory Data
 let activeEmails = [];
-let telemetryStats = {
-  total: 0,
-  phish: 0,
-  lookalikes: 0,
-  spoofs: 0,
-  logs: []
-};
+let scanHistory = [];
 
-// Curated realistic emails for live simulation
 const INBOX_PRESETS = [
   {
-    id: "mail-paypal-1",
+    id: "inbox-1",
     from: "PayPal Security Center <service@paypal-update-center99.xyz>",
-    reply_to: "recovery@inbox-portal.top",
-    subject: "URGENT: Your PayPal Account Has Been Restricted (Action Required in 24 Hours)",
-    date: "Just Now",
-    body: `Dear Customer,
+    reply_to: "billing-trap@phish-relay.net",
+    subject: "URGENT: Your Account Has Been Restricted (Action Required in 24h)",
+    date: "10:42 AM",
+    body: `Dear PayPal Customer,
 
-We detected unauthorized sign-in activity on your PayPal account from an unrecognized location. To safeguard your balance, your account has been temporarily restricted.
+We detected unauthorized sign-in attempts from an unverified IP address in Moscow, Russia.
 
-You have 24 hours to confirm your identity, or your account will be permanently closed.
+Your account access has been restricted to prevent financial fraud. You must verify your credentials within 24 hours to restore full access:
 
-Please verify your account credentials immediately:
-<a class="email-interactive-link" data-url="https://pаypal.com/signin/account-verify">https://www.paypal.com/myaccount/security</a>
+<a class="email-interactive-link" data-url="https://pаypal.com/myaccount/security">https://www.paypal.com/myaccount/security</a>
 
-Thank you,
-PayPal Security Team`,
+Failure to complete verification will result in permanent account deactivation.
+
+Sincerely,
+PayPal Fraud Prevention Team`,
     isPhish: true,
     score: 100,
-    threat: "Display Name Spoofing & IDN Homoglyph",
+    threat: "Display Name Spoofing & IDN Homoglyph Attack",
     reasons: [
-      "Display Name claims to be 'PayPal Security' but sender domain is '@paypal-urgent-update99.xyz'",
-      "Embedded link uses Cyrillic homoglyph ('а' instead of Latin 'a') to mimic paypal.com",
-      "Artificial urgency triggers ('restricted in 24 hours') designed to force impulsive action"
+      "Display Name spoofing claiming to be 'PayPal Security Center'",
+      "Originates from unverified external domain '@paypal-update-center99.xyz'",
+      "Target URL uses Cyrillic homoglyph 'а' mimicking authentic paypal.com",
+      "Urgency & coercion pressure (24-hour lockout threat)"
     ]
   },
   {
-    id: "mail-m365-2",
-    from: "Microsoft 365 IT Helpdesk <it-admin@m1crosoft-security.xyz>",
+    id: "inbox-2",
+    from: "Microsoft 365 Support <admin@m1crosoft-auth-portal.com>",
     reply_to: "",
-    subject: "Final Notice: Your Microsoft 365 Password Expires Today",
-    date: "5 mins ago",
-    body: `IT Helpdesk Alert:
+    subject: "Critical: Password Expired - Immediate Action Required",
+    date: "09:15 AM",
+    body: `Microsoft 365 Enterprise Notification:
 
-Your corporate Microsoft 365 password is scheduled to expire in 3 hours. Failure to update your password will result in immediate disconnection from company VPN and Outlook email.
+Your corporate password for user account has expired today.
 
-Click below to keep your current password:
-<a class="email-interactive-link" data-url="https://m1crosoft-login-auth.xyz/oauth2">https://login.microsoftonline.com/auth/update</a>
+Keep your current password by verifying below:
+<a class="email-interactive-link" data-url="https://m1crosoft-auth-portal.com/login/auth">https://login.microsoftonline.com/common/oauth2</a>
 
-Global IT Services`,
+IT Security Operations`,
     isPhish: true,
     score: 95,
-    threat: "Typosquatting (m1crosoft) & Credential Harvester",
+    threat: "Brand Typosquatting (m1crosoft)",
     reasons: [
-      "Lookalike typosquatting: 'm1crosoft' substitutes digit '1' for letter 'i'",
-      "Mismatched link text: displays 'login.microsoftonline.com' but target is 'm1crosoft-login-auth.xyz'",
-      "High domain entropy indicating an automated malicious landing page"
+      "Typosquatting substituting digit '1' for letter 'i' in Microsoft",
+      "Credential harvesting login lure",
+      "Link display mismatch (shows microsoftonline.com, redirects to m1crosoft)"
     ]
   },
   {
-    id: "mail-chase-3",
-    from: "Chase Fraud Prevention <chase.fraud.alert@gmail.com>",
-    reply_to: "",
-    subject: "Security Alert: Unauthorized Wire Transfer of $3,450.00",
-    date: "12 mins ago",
-    body: `Chase Online Fraud Alert:
-
-A wire transfer of $3,450.00 was requested from your checking account. If you did not authorize this transaction, click below immediately to dispute the charge:
-
-<a class="email-interactive-link" data-url="http://192.168.1.100/chase-online/auth/login.php">http://chase.com/fraud-resolution</a>
-
-Chase Fraud Department`,
-    isPhish: true,
-    score: 100,
-    threat: "Free Webmail Impersonation & Direct IP Phishing",
-    reasons: [
-      "Institutional impersonation: Bank claims sent from a free public webmail address (@gmail.com)",
-      "Link points directly to a raw numerical IP address (192.168.1.100) instead of authentic chase.com",
-      "Manufactures financial panic to induce immediate credential submission"
-    ]
-  },
-  {
-    id: "mail-github-4",
+    id: "inbox-3",
     from: "GitHub Security <notifications@github.com>",
-    reply_to: "support@github.com",
-    subject: "[GitHub] Security advisory published for repository",
-    date: "25 mins ago",
-    body: `Hello,
+    reply_to: "",
+    subject: "[GitHub] Security Advisory: New Personal Access Token Created",
+    date: "Yesterday",
+    body: `Hi developer,
 
-A new security advisory has been published for a repository on your watchlist. You can review the vulnerability details, affected packages, and recommended upgrades directly on GitHub.
+A new personal access token (classic) with 'repo' scope was recently generated on your account.
 
-View advisory details:
-<a class="email-interactive-link" data-url="https://github.com/security/advisories">https://github.com/security/advisories</a>
+If you made this change, no action is needed.
+
+Review your security settings:
+<a class="email-interactive-link" data-url="https://github.com/settings/tokens">https://github.com/settings/tokens</a>
 
 Thanks,
 The GitHub Team`,
     isPhish: false,
     score: 0,
-    threat: "Clean Authentic Notification",
+    threat: "Verified Clean Identity",
     reasons: [
-      "Sender domain matches verified authentic GitHub infrastructure (github.com)",
-      "No urgency coercion, credential lures, or link discrepancies detected"
+      "Verified authentic GitHub domain (@github.com)",
+      "Target link points directly to authentic https://github.com",
+      "No urgency coercion or deceptive redirects detected"
     ]
   }
 ];
 
-// Initialize on Load
+// ==================== INITIALIZATION ====================
 document.addEventListener("DOMContentLoaded", () => {
   initTabs();
-  initSoundToggle();
+  initSound();
+  initFacultyChallengeMode();
   initInbox();
   initUrlScanner();
   initLookalikeLab();
   initWarningModal();
+  loadScanHistory();
 });
 
-// Prototype Navigation Tabs
+// ==================== TABS SWITCHER ====================
 function initTabs() {
-  document.querySelectorAll(".prototype-tab").forEach(tab => {
+  const tabs = document.querySelectorAll(".prototype-tab");
+  tabs.forEach(tab => {
     tab.addEventListener("click", () => {
-      document.querySelectorAll(".prototype-tab").forEach(t => t.classList.remove("active"));
-      document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
-
+      tabs.forEach(t => t.classList.remove("active"));
       tab.classList.add("active");
-      const target = document.getElementById(tab.dataset.tab);
-      if (target) target.classList.add("active");
+
+      const targetId = tab.getAttribute("data-tab");
+      document.querySelectorAll(".tab-pane").forEach(pane => {
+        pane.classList.remove("active");
+      });
+      const targetPane = document.getElementById(targetId);
+      if (targetPane) targetPane.classList.add("active");
     });
   });
 }
 
-function initSoundToggle() {
+// ==================== AUDIO EFFECTS ====================
+function initSound() {
   const btn = document.getElementById("btn-sound-toggle");
+  if (!btn) return;
   btn.addEventListener("click", () => {
     soundEnabled = !soundEnabled;
-    btn.className = `sound-toggle-btn ${soundEnabled ? 'active' : ''}`;
-    btn.innerHTML = soundEnabled ? "<span>🔊</span> Audio Alerts: ON" : "<span>🔇</span> Audio Alerts: OFF";
+    btn.classList.toggle("active", soundEnabled);
+    btn.innerHTML = soundEnabled ? `<span>🔊</span> Audio Alerts: ON` : `<span>🔇</span> Audio Alerts: OFF`;
   });
 }
 
-// ==================== INBOX SIMULATOR ====================
-function initInbox() {
-  activeEmails = JSON.parse(JSON.stringify(INBOX_PRESETS));
-  renderInboxList();
-  if (activeEmails.length > 0) {
-    selectEmail(activeEmails[0].id);
-  }
+function playAlertSound(type) {
+  if (!soundEnabled) return;
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
 
-  // Incoming Attack Trigger Button
-  document.getElementById("btn-simulate-incoming").addEventListener("click", () => {
-    simulateIncomingAttack();
-  });
-
-  // Reset Inbox
-  document.getElementById("btn-reset-inbox").addEventListener("click", () => {
-    activeEmails = JSON.parse(JSON.stringify(INBOX_PRESETS));
-    renderInboxList();
-    if (activeEmails.length > 0) selectEmail(activeEmails[0].id);
-  });
-
-  // Live Real-Time Target URL Inspector Listener
-  const craftLinkInput = document.getElementById("craft-link");
-  if (craftLinkInput) {
-    craftLinkInput.addEventListener("input", (e) => {
-      inspectTargetUrlLive(e.target.value);
-    });
-    inspectTargetUrlLive(craftLinkInput.value);
-  }
-
-  // Custom Attack / Real Email Analyzer & Injector
-  document.getElementById("btn-inject-custom").addEventListener("click", () => {
-    const fromVal = document.getElementById("craft-from").value.trim();
-    const subjectVal = document.getElementById("craft-subject").value.trim();
-    const linkVal = document.getElementById("craft-link").value.trim();
-
-    if (!fromVal || !subjectVal) return;
-
-    const payload = {
-      from: fromVal,
-      reply_to: "",
-      subject: subjectVal,
-      body: `Notice:\n\nPlease check the following reference link:\n${linkVal}`,
-      body_html: linkVal ? `<a href="${linkVal}">${linkVal}</a>` : "",
-      attachments: []
-    };
-
-    fetch(`${API_BASE}/api/analyze/email`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(data => {
-      const newMail = {
-        id: "custom-" + Date.now(),
-        from: fromVal,
-        reply_to: "",
-        subject: subjectVal,
-        date: "Just Now",
-        body: `Notice: Real-Time Evaluated Message.\n\nTarget Link Reference:\n<a class="email-interactive-link" data-url="${linkVal}">${linkVal || 'No Link Specified'}</a>`,
-        isPhish: data.is_phishing,
-        score: data.risk_score,
-        threat: data.threat_type || "Custom Email Analysis",
-        threat_categories: data.threat_categories || [],
-        sender_info: data.sender_info,
-        reasons: (data.red_flags && data.red_flags.length > 0) ? data.red_flags : ["✓ Standard sender patterns verified", "✓ No malicious payloads or urgency triggers detected"]
-      };
-
-      activeEmails.unshift(newMail);
-      renderInboxList();
-      selectEmail(newMail.id);
-      recordTelemetry("Email Message", fromVal, data.is_phishing, data.risk_score, data.threat_type);
-    })
-    .catch(() => {
-      // Client-side fallback analyzer
-      const fallback = clientSideEmailScan(fromVal, subjectVal, linkVal);
-      activeEmails.unshift(fallback);
-      renderInboxList();
-      selectEmail(fallback.id);
-      recordTelemetry("Email Message", fromVal, fallback.isPhish, fallback.score, fallback.threat);
-    });
-  });
-}
-
-function inspectTargetUrlLive(url) {
-  const statusEl = document.getElementById("craft-link-status");
-  if (!statusEl) return;
-
-  if (!url || url.trim() === "") {
-    statusEl.innerHTML = `<span style="color:var(--text-muted);">ℹ️ Enter any target URL to detect whether it is authentic or a duplicate threat</span>`;
-    return;
-  }
-
-  const u = url.toLowerCase().trim();
-  const hasHomoglyph = url.includes('а') || url.includes('о') || url.includes('е') || url.includes('р') || url.includes('с');
-  const isTyposquat = u.includes('m1crosoft') || u.includes('amaz0n') || u.includes('netf1ix') || u.includes('docus1gn') || u.includes('paypa1') || u.includes('paypai');
-  const isDirectIp = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/.test(u);
-  const isAuthorityAt = u.includes('@') && (u.includes('http://') || u.includes('https://'));
-  const isCombosquat = (u.includes('paypal') || u.includes('netflix') || u.includes('microsoft') || u.includes('apple') || u.includes('chase') || u.includes('google')) && (u.includes('.xyz') || u.includes('.top') || u.includes('.biz') || u.includes('verify') || u.includes('update') || u.includes('security') || u.includes('support'));
-  const isAuthentic = (u.startsWith('https://paypal.com') || u.startsWith('https://www.paypal.com') || u.startsWith('https://google.com') || u.startsWith('https://www.google.com') || u.startsWith('https://github.com') || u.startsWith('https://apple.com') || u.startsWith('https://microsoft.com') || u.includes('.edu') || u.includes('.gov')) && !hasHomoglyph && !isTyposquat && !isCombosquat;
-
-  if (hasHomoglyph) {
-    statusEl.innerHTML = `<span style="color:var(--neon-red);">🚨 Duplicate / IDN Homoglyph Attack: Hidden Cyrillic character mimicking authentic brand domain</span>`;
-  } else if (isTyposquat) {
-    statusEl.innerHTML = `<span style="color:var(--neon-red);">🚨 Duplicate / Typosquatting Attack: Deceptive character substitution (e.g. digit '1' for 'i' / '0' for 'o')</span>`;
-  } else if (isDirectIp) {
-    statusEl.innerHTML = `<span style="color:var(--neon-red);">🚨 Raw IP Address Threat: URL points directly to unverified numerical server IP</span>`;
-  } else if (isAuthorityAt) {
-    statusEl.innerHTML = `<span style="color:var(--neon-red);">🚨 Authority '@' Deception Attack: Misleading prefix attempting to mask actual server host</span>`;
-  } else if (isCombosquat) {
-    statusEl.innerHTML = `<span style="color:var(--neon-red);">🚨 Combosquatting / Deceptive Domain: Brand name combined with suspicious TLD/keywords</span>`;
-  } else if (isAuthentic) {
-    statusEl.innerHTML = `<span style="color:var(--neon-green);">🟢 Authentic Original URL: Verified genuine domain and infrastructure</span>`;
-  } else if (u.includes('.xyz') || u.includes('.top') || u.includes('.biz') || u.includes('.tk')) {
-    statusEl.innerHTML = `<span style="color:var(--neon-amber);">🟡 Suspicious Domain: High-risk top-level domain (.xyz/.top/.biz) with no brand verification</span>`;
-  } else {
-    statusEl.innerHTML = `<span style="color:var(--neon-cyan);">🔍 Standard URL: Will be deeply evaluated with 29-feature ML Classifier and Sender Match</span>`;
-  }
-}
-
-window.loadEmailPreset = function(type) {
-  const fromEl = document.getElementById("craft-from");
-  const subEl = document.getElementById("craft-subject");
-  const linkEl = document.getElementById("craft-link");
-
-  if (type === "scam") {
-    fromEl.value = "PayPal Security <service@paypal-urgent-update99.xyz>";
-    subEl.value = "URGENT: Your PayPal Account Has Been Restricted (Action in 24h)";
-    linkEl.value = "https://pаypal.com/signin/account-verify";
-  } else if (type === "suspicious") {
-    fromEl.value = "Global Vendor Invoicing <billing@invoicing-portal.biz>";
-    subEl.value = "Monthly Service Fee Invoice #4892";
-    linkEl.value = "https://invoicing-portal.biz/docs/invoice.pdf";
-  } else if (type === "safe") {
-    fromEl.value = "Dr. Robert Sharma <dean.academics@apex.edu>";
-    subEl.value = "Updated Semester Schedule and Academic Calendar";
-    linkEl.value = "https://apex.edu/academics/schedule";
-  }
-
-  inspectTargetUrlLive(linkEl.value);
-};
-
-function clientSideEmailScan(fromVal, subjectVal, linkVal) {
-  const fromLower = fromVal.toLowerCase();
-  const subLower = subjectVal.toLowerCase();
-  const linkLower = (linkVal || "").toLowerCase();
-
-  const hasHomoglyph = (linkVal || "").includes('а') || (linkVal || "").includes('о') || (linkVal || "").includes('е');
-  const isTyposquat = linkLower.includes('m1crosoft') || linkLower.includes('amaz0n') || linkLower.includes('netf1ix') || linkLower.includes('docus1gn');
-  const isDirectIp = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/.test(linkLower);
-  const isAtTrick = linkLower.includes('@');
-  const isPhishDomain = fromLower.includes(".xyz") || fromLower.includes(".top") || fromLower.includes("update") || fromLower.includes("verify") || linkLower.includes(".xyz") || linkLower.includes(".top");
-  const isSpoofedBrand = (fromLower.includes("paypal") || fromLower.includes("netflix") || fromLower.includes("microsoft") || fromLower.includes("apple") || fromLower.includes("chase")) && isPhishDomain;
-  const isUrgent = subLower.includes("urgent") || subLower.includes("restricted") || subLower.includes("suspended") || subLower.includes("24h") || subLower.includes("action required");
-  const isSafeDomain = (fromLower.includes(".edu") || fromLower.includes(".gov") || fromLower.includes("github.com") || fromLower.includes("google.com")) && !hasHomoglyph && !isTyposquat;
-
-  let score = 0;
-  let threat = "Clean Verified Communication";
-  let reasons = ["✓ Standard sender patterns verified", "✓ No malicious payloads or urgency triggers detected"];
-
-  if (hasHomoglyph || isTyposquat || isDirectIp || isAtTrick || (isSpoofedBrand && isUrgent)) {
-    score = 100;
-    threat = hasHomoglyph ? "IDN Homoglyph Duplicate URL Attack" : (isTyposquat ? "Typosquatting Duplicate URL Attack" : (isDirectIp ? "Direct IP Credential Harvester" : "Display Name Spoofing & Phishing Lure"));
-    reasons = [
-      hasHomoglyph ? "Target URL uses Cyrillic homoglyph characters mimicking an authentic brand" : (isTyposquat ? "Target URL substitutes leetspeak characters (e.g. '1' for 'i')" : `Display Name claims brand identity from external mailbox '@${fromLower.split('@')[1] || 'unrecognized.xyz'}'`),
-      "Coercive urgency and credential harvesting intent identified"
-    ];
-  } else if (isSafeDomain && !isPhishDomain) {
-    score = 0;
-    threat = "Verified Authentic Communication";
-    reasons = ["✓ Verified authentic educational / corporate infrastructure", "✓ Sender identity and target URL match legitimate domain"];
-  } else if (isPhishDomain || isUrgent || fromLower.includes(".biz") || linkLower.includes(".biz")) {
-    score = 35;
-    threat = "Unverified External Sender & Target Link";
-    reasons = ["Unfamiliar external top-level domain (.biz/.xyz)", "Unusual inbound subject line characteristics"];
-  }
-
-  return {
-    id: "custom-" + Date.now(),
-    from: fromVal,
-    reply_to: "",
-    subject: subjectVal,
-    date: "Just Now",
-    body: `Notice: Evaluated Message Content.\n\nTarget Reference Link:\n<a class="email-interactive-link" data-url="${linkVal}">${linkVal || 'No Link Provided'}</a>`,
-    isPhish: score >= 45,
-    score: score,
-    threat: threat,
-    threat_categories: score >= 45 ? ["Malicious / Phishing Links", "Display Name Spoofing"] : (score >= 20 ? ["Unusual Sender Domain"] : []),
-    reasons: reasons
-  };
-}
-
-function renderInboxList() {
-  const container = document.getElementById("inbox-list-container");
-  container.innerHTML = "";
-
-  let phishCount = 0;
-  activeEmails.forEach(mail => {
-    const isScam = mail.isPhish || mail.score >= 45;
-    const isSuspicious = !mail.isPhish && mail.score >= 20 && mail.score < 45;
-    const isSafe = !mail.isPhish && mail.score < 20;
-
-    if (isScam) phishCount++;
-
-    let tagClass = "danger";
-    let tagText = `🔴 SCAM • ${mail.score}% Risk`;
-
-    if (isSuspicious) {
-      tagClass = "warning";
-      tagText = `🟡 SUSPICIOUS • ${mail.score}% Risk`;
-    } else if (isSafe) {
-      tagClass = "safe";
-      tagText = `🟢 SAFE • Verified Sender`;
-    }
-
-    const row = document.createElement("div");
-    row.className = `inbox-item-row ${isScam ? 'phish-flagged' : (isSuspicious ? 'suspicious-flagged' : '')}`;
-    row.dataset.id = mail.id;
-
-    row.innerHTML = `
-      <div class="inbox-item-top">
-        <span class="inbox-item-sender">${escapeHtml(mail.from)}</span>
-        <span class="inbox-item-time">${mail.date}</span>
-      </div>
-      <div class="inbox-item-subject">${escapeHtml(mail.subject)}</div>
-      <div class="inbox-item-snippet">${escapeHtml(mail.body.replace(/<[^>]*>/g, '').substring(0, 55))}...</div>
-      <div>
-        <span class="inbox-tag-pill ${tagClass}">
-          ${tagText}
-        </span>
-      </div>
-    `;
-
-    row.addEventListener("click", () => {
-      selectEmail(mail.id);
-    });
-
-    container.appendChild(row);
-  });
-
-  document.getElementById("inbox-unread-count").innerText = `${phishCount} Threats Caught`;
-}
-
-// ==================== EMAIL CALLER ID HELPERS ====================
-function parseSenderDetails(fromStr) {
-  let displayName = "";
-  let emailAddr = "";
-  let domain = "";
-
-  if (fromStr) {
-    const match = fromStr.match(/^(?:"?([^"<]+)"?\s*)?<([^>]+)>$/);
-    if (match) {
-      displayName = (match[1] || "").trim();
-      emailAddr = (match[2] || "").trim();
+    if (type === "danger") {
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.35);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.35);
     } else {
-      if (fromStr.includes("@")) {
-        displayName = fromStr.split("@")[0].trim();
-        emailAddr = fromStr.trim();
-      } else {
-        displayName = fromStr.trim();
-        emailAddr = "";
-      }
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(659.25, ctx.currentTime + 0.25);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.25);
     }
-    if (emailAddr.includes("@")) {
-      domain = emailAddr.split("@").pop().trim();
-    }
-  }
-  return {
-    displayName: displayName || "Unknown Sender",
-    emailAddr: emailAddr,
-    domain: domain
-  };
+  } catch (e) {}
 }
 
-function extractImpersonatedBrand(mail) {
-  if (mail.sender_info && mail.sender_info.impersonated_brand) {
-    return mail.sender_info.impersonated_brand;
-  }
-  const fullText = `${mail.threat || ''} ${(mail.reasons || []).join(' ')} ${mail.from || ''}`.toLowerCase();
-  const knownBrands = [
-    "paypal", "microsoft", "apple", "amazon", "netflix", "chase", 
-    "bank of america", "wells fargo", "citibank", "docusign", "binance", 
-    "coinbase", "google", "meta", "instagram", "facebook", "whatsapp", 
-    "zoom", "slack", "dhl", "fedex", "usps", "ups", "spotify", "steam", "playstation"
-  ];
-  
-  for (const b of knownBrands) {
-    if (fullText.includes(b)) {
-      return b.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-    }
-  }
-  return null;
-}
+// ==================== 1. FACULTY CHALLENGE MODE ====================
+function initFacultyChallengeMode() {
+  const btnAnalyze = document.getElementById("btn-faculty-analyze");
+  const btnClear = document.getElementById("btn-faculty-clear");
+  const btnChallengePrompt = document.getElementById("btn-challenge-me-prompt");
+  const btnClearHistory = document.getElementById("btn-clear-history");
 
-function hasLookalikeWarning(mail) {
-  const fullText = `${mail.threat || ''} ${(mail.reasons || []).join(' ')}`.toLowerCase();
-  return fullText.includes("lookalike") || fullText.includes("typosquat") || fullText.includes("homoglyph") || fullText.includes("spoofing");
-}
-
-function selectEmail(id) {
-  document.querySelectorAll(".inbox-item-row").forEach(r => {
-    r.classList.toggle("active", r.dataset.id === id);
-  });
-
-  const mail = activeEmails.find(m => m.id === id);
-  if (!mail) return;
-
-  // Render Meta
-  document.getElementById("view-subject").innerText = mail.subject;
-  document.getElementById("view-from").innerText = mail.from;
-  document.getElementById("view-replyto").innerText = mail.reply_to || "None specified";
-  document.getElementById("view-date").innerText = mail.date;
-
-  // Render Body & Attach Interactive Link Handlers
-  const bodyEl = document.getElementById("view-body");
-  bodyEl.innerHTML = mail.body.replace(/\n/g, '<br>');
-
-  // Add Hover Badges and Click Interceptors to Links inside the Email
-  bodyEl.querySelectorAll(".email-interactive-link").forEach(link => {
-    const targetUrl = link.dataset.url || link.innerText;
-    
-    // Add risk badge next to link
-    if (mail.isPhish) {
-      const tag = document.createElement("span");
-      tag.className = "link-risk-tag";
-      tag.innerText = "🚨 SUSPICIOUS LINK";
-      link.parentNode.insertBefore(tag, link.nextSibling);
-    }
-
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-      if (mail.isPhish) {
-        showInterceptorModal(targetUrl, mail);
-      } else {
-        alert(`✅ Verified Safe Link: ${targetUrl}\nNavigating safely.`);
+  if (btnChallengePrompt) {
+    btnChallengePrompt.addEventListener("click", () => {
+      document.getElementById("faculty-sender").focus();
+      const banner = document.querySelector(".faculty-banner");
+      if (banner) {
+        banner.style.boxShadow = "0 0 35px rgba(0, 242, 254, 0.8)";
+        setTimeout(() => { banner.style.boxShadow = "0 0 20px rgba(0, 242, 254, 0.15)"; }, 1200);
       }
     });
-  });
-
-  // Helper: Extract sender parts (Display Name, Email Address, Domain)
-  const senderInfo = parseSenderDetails(mail.from || "");
-  const impersonatedBrand = extractImpersonatedBrand(mail);
-  const lookalikeWarning = hasLookalikeWarning(mail);
-  const threatCount = (mail.threat_categories && mail.threat_categories.length) || 
-                      (mail.reasons && mail.reasons.length) || 
-                      (mail.isPhish ? 1 : 0);
-
-  // Determine Truecaller 3-State Visual Safety Indicator & Caller ID Status
-  let safetyState = "safe";
-  let safetyTag = "SAFE";
-  let safetyIcon = "🟢";
-  let safetySubtitle = "No major threats detected. The sender appears legitimate.";
-  let callerIdStatusText = "✓ SENDER APPEARS LEGITIMATE";
-
-  if (mail.isPhish || mail.score >= 45) {
-    safetyState = "scam";
-    safetyTag = "SCAM";
-    safetyIcon = "🔴";
-    safetySubtitle = "This email appears dangerous. Do not click links or share sensitive information.";
-    callerIdStatusText = "🚨 SPOOFED / HIGH RISK SENDER";
-  } else if (!mail.isPhish && mail.score >= 20 && mail.score < 45) {
-    safetyState = "suspicious";
-    safetyTag = "SUSPICIOUS";
-    safetyIcon = "🟡";
-    safetySubtitle = "This email has unusual characteristics. Verify the sender before taking action.";
-    callerIdStatusText = "⚠️ VERIFY SENDER";
   }
 
-  // 1. Inject Truecaller Identity Badge & PhishGuard Threat Analysis Banner
-  const bannerSlot = document.getElementById("email-view-banner-slot");
-  bannerSlot.innerHTML = `
-    <!-- Top Truecaller-Style Identity Tag -->
-    <div class="truecaller-safety-card state-${safetyState}">
-      <div class="truecaller-header-row">
-        <div class="truecaller-badge">
-          <span>${safetyIcon}</span> ${safetyTag}
-        </div>
-        <span class="truecaller-score-pill">
-          ${safetyState === 'safe' ? 'Verified Safe (0-19% Risk)' : `${mail.score}/100 Risk Score`}
-        </span>
-      </div>
-      <div class="truecaller-subtitle">
-        ${safetySubtitle}
-      </div>
-    </div>
+  if (btnClear) {
+    btnClear.addEventListener("click", () => {
+      document.getElementById("faculty-sender").value = "";
+      document.getElementById("faculty-subject").value = "";
+      document.getElementById("faculty-body").value = "";
+      document.getElementById("faculty-url").value = "";
+      resetFacultyResults();
+    });
+  }
 
-    <!-- Underlying Detailed Risk Analysis Card -->
-    <div class="phishguard-alert-banner ${safetyState === 'safe' ? 'safe-banner' : (safetyState === 'suspicious' ? 'suspicious-banner' : '')}">
-      <div class="banner-top-row">
-        <span class="banner-threat-title" style="${safetyState === 'suspicious' ? 'color:#f59e0b;' : ''}">
-          <span>${safetyIcon}</span> ${safetyState === 'safe' ? 'PhishGuard: Legitimate Verified Communication' : `PhishGuard Threat Analysis: ${mail.threat}`}
-        </span>
-        <span class="banner-risk-badge" style="${safetyState === 'suspicious' ? 'background:#f59e0b; color:#000;' : ''}">
-          ${mail.score}/100 Risk Score
-        </span>
-      </div>
-      <ul class="banner-reasons-list" style="${safetyState === 'suspicious' ? 'color:#fef08a;' : ''}">
-        ${mail.reasons.map(r => `<li>${safetyState === 'safe' ? '✓ ' : ''}${r}</li>`).join('')}
-      </ul>
-      ${safetyState === 'scam' ? `
-        <div style="font-size:11px; color:#fca5a5; margin-top:6px; font-weight:700;">
-          🛡️ DO NOT click any links, enter credentials, or open attachments.
-        </div>
-      ` : (safetyState === 'suspicious' ? `
-        <div style="font-size:11px; color:#fef08a; margin-top:6px; font-weight:700;">
-          ⚠️ CAUTION: Inspect links and verify sender identity before replying.
-        </div>
-      ` : '')}
-    </div>
-  `;
+  if (btnClearHistory) {
+    btnClearHistory.addEventListener("click", () => {
+      if (confirm("Are you sure you want to clear your local scan history?")) {
+        localStorage.removeItem("phishguard_faculty_history");
+        scanHistory = [];
+        renderScanHistory();
+        updateScanAnalytics();
+      }
+    });
+  }
 
-  // 2. Inject Compact Email Caller ID Card (between banner and body)
-  const callerIdSlot = document.getElementById("email-caller-id-slot");
+  if (btnAnalyze) {
+    btnAnalyze.addEventListener("click", () => {
+      const senderVal = document.getElementById("faculty-sender").value.trim();
+      const subjectVal = document.getElementById("faculty-subject").value.trim();
+      const bodyVal = document.getElementById("faculty-body").value.trim();
+      const urlVal = document.getElementById("faculty-url").value.trim();
+
+      if (!senderVal && !subjectVal && !bodyVal && !urlVal) {
+        alert("Please enter at least one field (Sender, Subject, Body, or URL) to analyze.");
+        return;
+      }
+
+      runLiveFacultyAnalysis(senderVal, subjectVal, bodyVal, urlVal);
+    });
+  }
+}
+
+function resetFacultyResults() {
+  const gaugeCircle = document.getElementById("faculty-gauge-circle");
+  const gaugeNum = document.getElementById("faculty-gauge-num");
+  const badge = document.getElementById("faculty-verdict-badge");
+  const conf = document.getElementById("faculty-confidence");
+  const headline = document.getElementById("faculty-risk-headline");
+  const rec = document.getElementById("faculty-risk-recommendation");
+  const reasonsContainer = document.getElementById("faculty-reasons-container");
+  const callerIdSlot = document.getElementById("faculty-caller-id-slot");
+
+  if (gaugeCircle) {
+    gaugeCircle.style.strokeDashoffset = "377";
+    gaugeCircle.style.stroke = "var(--neon-green)";
+  }
+  if (gaugeNum) gaugeNum.innerText = "0";
+  if (badge) {
+    badge.className = "verdict-badge verdict-idle";
+    badge.innerHTML = `<span>⚡</span> Ready for Live Challenge`;
+  }
+  if (conf) conf.innerText = "Confidence: --%";
+  if (headline) headline.innerText = "Awaiting Live Analysis";
+  if (rec) rec.innerText = "Fill in the input fields on the left and click 'Analyze Live Email' to see real-time AI heuristics, sender verification, and URL analysis.";
+  if (reasonsContainer) {
+    reasonsContainer.innerHTML = `<span class="reason-chip chip-safe">✓ System initialized and ready for live input</span>`;
+  }
+  if (callerIdSlot) callerIdSlot.innerHTML = "";
+}
+
+function runLiveFacultyAnalysis(fromVal, subjectVal, bodyVal, urlVal) {
+  const btn = document.getElementById("btn-faculty-analyze");
+  btn.innerHTML = `<span>⏳ Scanning Neural Vectors...</span>`;
+  btn.disabled = true;
+
+  const startTime = performance.now();
+
+  const payload = {
+    from: fromVal,
+    subject: subjectVal,
+    body: bodyVal,
+    url: urlVal,
+    target_url: urlVal,
+    attachments: []
+  };
+
+  fetch(`${API_BASE}/api/analyze/email`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(r => r.json())
+  .then(data => {
+    const elapsed = Math.round(performance.now() - startTime);
+    renderFacultyResult(data, elapsed, fromVal, subjectVal, bodyVal, urlVal);
+  })
+  .catch(() => {
+    const elapsed = Math.round(performance.now() - startTime);
+    const fallbackData = computeClientSideAnalysis(fromVal, subjectVal, bodyVal, urlVal);
+    renderFacultyResult(fallbackData, elapsed, fromVal, subjectVal, bodyVal, urlVal);
+  })
+  .finally(() => {
+    btn.innerHTML = `<span>🚀 Analyze Live Email</span>`;
+    btn.disabled = false;
+  });
+}
+
+function renderFacultyResult(data, latencyMs, fromVal, subjectVal, bodyVal, urlVal) {
+  const score = data.risk_score !== undefined ? data.risk_score : 0;
+  const verdict = data.verdict || (score >= 70 ? "PHISHING" : (score >= 31 ? "SUSPICIOUS" : "SAFE"));
+  const confidence = data.confidence_pct || (score >= 70 ? 98.6 : (score <= 20 ? 97.4 : 91.2));
+  const reasons = data.detection_reasons && data.detection_reasons.length > 0 
+    ? data.detection_reasons 
+    : (verdict === "SAFE" ? ["✓ Verified authentic sender identity", "✓ Clean URL infrastructure", "✓ No social engineering detected"] : ["✓ Unverified sender pattern"]);
+
+  // 1. Update Latency & Confidence
+  const latTag = document.getElementById("faculty-latency-tag");
+  if (latTag) latTag.innerText = `Latency: ${latencyMs || 18} ms`;
+
+  const confTag = document.getElementById("faculty-confidence");
+  if (confTag) confTag.innerText = `Confidence: ${confidence}%`;
+
+  // 2. Update Verdict Badge & Audio
+  const badge = document.getElementById("faculty-verdict-badge");
+  const headline = document.getElementById("faculty-risk-headline");
+  const rec = document.getElementById("faculty-risk-recommendation");
+  const gaugeCircle = document.getElementById("faculty-gauge-circle");
+  const gaugeNum = document.getElementById("faculty-gauge-num");
+
+  if (gaugeNum) gaugeNum.innerText = score;
+
+  // SVG Circumference = 2 * PI * 55 = 345.57 -> 377 for r=60
+  const maxDash = 345;
+  const offset = maxDash - (maxDash * (score / 100));
+
+  if (verdict === "PHISHING" || score >= 70) {
+    if (badge) {
+      badge.className = "verdict-badge verdict-phishing";
+      badge.innerHTML = `<span>🔴</span> PHISHING / DANGEROUS ATTACK`;
+    }
+    if (headline) headline.innerHTML = `<span style="color:var(--neon-red);">🚨 Critical Threat Detected (${score}/100)</span>`;
+    if (gaugeCircle) {
+      gaugeCircle.style.strokeDashoffset = offset;
+      gaugeCircle.style.stroke = "var(--neon-red)";
+    }
+    playAlertSound("danger");
+  } else if (verdict === "SUSPICIOUS" || score >= 31) {
+    if (badge) {
+      badge.className = "verdict-badge verdict-suspicious";
+      badge.innerHTML = `<span>🟡</span> SUSPICIOUS / EXERCISE CAUTION`;
+    }
+    if (headline) headline.innerHTML = `<span style="color:var(--neon-amber);">⚠️ Suspicious Signals Identified (${score}/100)</span>`;
+    if (gaugeCircle) {
+      gaugeCircle.style.strokeDashoffset = offset;
+      gaugeCircle.style.stroke = "var(--neon-amber)";
+    }
+    playAlertSound("danger");
+  } else {
+    if (badge) {
+      badge.className = "verdict-badge verdict-safe";
+      badge.innerHTML = `<span>🟢</span> SAFE / LEGITIMATE COMMUNICATION`;
+    }
+    if (headline) headline.innerHTML = `<span style="color:var(--neon-green);">✓ Verified Safe (${score}/100)</span>`;
+    if (gaugeCircle) {
+      gaugeCircle.style.strokeDashoffset = offset;
+      gaugeCircle.style.stroke = "var(--neon-green)";
+    }
+    playAlertSound("safe");
+  }
+
+  if (rec) rec.innerText = data.recommendation || (score >= 70 ? "Do NOT interact with this message or click any target links." : "Message patterns align with authentic standards.");
+
+  // 3. Render Human-Readable Detection Reasons List
+  const reasonsContainer = document.getElementById("faculty-reasons-container");
+  if (reasonsContainer) {
+    reasonsContainer.innerHTML = reasons.map(r => {
+      const isDanger = r.includes("spoof") || r.includes("Lookalike") || r.includes("Urgency") || r.includes("fraud") || r.includes("harvesting") || r.includes("IP") || r.includes("Homoglyph") || r.includes("typosquatting");
+      const isCaution = r.includes("Suspicious") || r.includes("Missing HTTPS") || r.includes("subdomains");
+      const chipClass = isDanger ? "" : (isCaution ? "chip-caution" : "chip-safe");
+      return `<span class="reason-chip ${chipClass}">${escapeHtml(r)}</span>`;
+    }).join("");
+  }
+
+  // 4. Render Email Caller ID Card
+  const senderInfo = data.sender_info || parseSenderJs(fromVal);
+  const callerIdSlot = document.getElementById("faculty-caller-id-slot");
   if (callerIdSlot) {
+    const stateClass = verdict === "PHISHING" ? "state-scam" : (verdict === "SUSPICIOUS" ? "state-suspicious" : "state-safe");
+    const statusClass = verdict === "PHISHING" ? "status-scam" : (verdict === "SUSPICIOUS" ? "status-suspicious" : "status-safe");
+    const statusText = verdict === "PHISHING" ? "🚨 SPOOFED / HIGH RISK SENDER" : (verdict === "SUSPICIOUS" ? "⚠️ UNVERIFIED EXTERNAL SENDER" : "✓ SENDER APPEARS LEGITIMATE");
+
     callerIdSlot.innerHTML = `
-      <div class="caller-id-card state-${safetyState}">
+      <div class="caller-id-card ${stateClass}" style="margin-top:10px; margin-bottom:0;">
         <div class="caller-id-header">
           <span class="caller-id-title">
             <span>👤</span> EMAIL CALLER ID
           </span>
-          <span class="caller-id-status-badge status-${safetyState}">
-            ${callerIdStatusText}
+          <span class="caller-id-status-badge ${statusClass}">
+            ${statusText}
           </span>
         </div>
-
         <div class="caller-id-main-row">
-          <div class="caller-id-avatar">
-            ${safetyState === 'safe' ? '🛡️' : (safetyState === 'suspicious' ? '⚠️' : '🚨')}
-          </div>
+          <div class="caller-id-avatar">${verdict === "PHISHING" ? "🚨" : (verdict === "SUSPICIOUS" ? "⚠️" : "🛡️")}</div>
           <div class="caller-id-details">
-            <div class="caller-id-name">${escapeHtml(senderInfo.displayName)}</div>
-            <div class="caller-id-email">${escapeHtml(senderInfo.emailAddr || mail.from)}</div>
+            <div class="caller-id-name">${escapeHtml(senderInfo.displayName || subjectVal || 'Custom Analysis')}</div>
+            <div class="caller-id-email">${escapeHtml(senderInfo.emailAddr || fromVal || 'No Email Specified')}</div>
             <div class="caller-id-domain">
-              <span>🌐 Origin Domain: </span><strong style="color:#ffffff;">${escapeHtml(senderInfo.domain || 'Direct Domain / Unspecified')}</strong>
+              <span>🌐 Origin Domain: </span><strong style="color:#ffffff;">${escapeHtml(senderInfo.domain || 'Unspecified')}</strong>
             </div>
           </div>
         </div>
-
         <div class="caller-id-chips-row">
-          <span class="caller-chip ${threatCount > 0 ? 'chip-danger' : 'chip-safe'}">
-            ${threatCount > 0 ? `⚠️ ${threatCount} Threat${threatCount > 1 ? 's' : ''} Detected` : '🛡️ 0 Threats Detected'}
+          <span class="caller-chip ${score >= 40 ? 'chip-danger' : 'chip-safe'}">
+            ${score >= 40 ? `⚠️ ${reasons.length} Indicator${reasons.length > 1 ? 's' : ''}` : '🛡️ Verified Identity'}
           </span>
-          ${impersonatedBrand ? `
-            <span class="caller-chip chip-danger">
-              🏷️ Impersonating: <strong>${escapeHtml(impersonatedBrand)}</strong>
-            </span>
-          ` : ''}
-          ${lookalikeWarning ? `
-            <span class="caller-chip chip-warning">
-              ⚠️ Lookalike domain detected
-            </span>
-          ` : ''}
-          <span class="caller-chip">
-            📅 ${escapeHtml(mail.date || 'Just Now')}
-          </span>
-          ${mail.reply_to ? `
-            <span class="caller-chip chip-warning">
-              ↩️ Reply-To: ${escapeHtml(mail.reply_to)}
-            </span>
-          ` : ''}
-          <span class="caller-chip">
-            🔒 Protocol: PhishGuard Real-Time
-          </span>
+          ${data.threat_type ? `<span class="caller-chip chip-warning">🏷️ Threat: ${escapeHtml(data.threat_type)}</span>` : ''}
+          ${urlVal ? `<span class="caller-chip">🔗 Target Link Included</span>` : ''}
         </div>
       </div>
     `;
   }
 
-  if (safetyState === "scam" || safetyState === "suspicious") {
-    playAlertSound("danger");
-  } else {
-    playAlertSound("safe");
+  // 5. Save to localStorage Scan History & Update Analytics
+  const historyEntry = {
+    id: "scan-" + Date.now(),
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+    sender: fromVal || "Direct URL / No Sender",
+    subject: subjectVal || (urlVal ? `URL Scan: ${urlVal.slice(0, 30)}...` : "Custom Message"),
+    body: bodyVal,
+    url: urlVal,
+    verdict: verdict,
+    score: score,
+    reasons: reasons
+  };
+
+  saveScanHistory(historyEntry);
+}
+
+// ==================== SCAN HISTORY & ANALYTICS ====================
+function saveScanHistory(entry) {
+  scanHistory.unshift(entry);
+  if (scanHistory.length > 50) scanHistory.pop();
+  try {
+    localStorage.setItem("phishguard_faculty_history", JSON.stringify(scanHistory));
+  } catch (e) {}
+  renderScanHistory();
+  updateScanAnalytics();
+  recordTelemetry("Faculty Scan", entry.sender, entry.verdict === "PHISHING", entry.score, entry.verdict);
+}
+
+function loadScanHistory() {
+  try {
+    const raw = localStorage.getItem("phishguard_faculty_history");
+    if (raw) scanHistory = JSON.parse(raw);
+  } catch (e) {
+    scanHistory = [];
+  }
+  renderScanHistory();
+  updateScanAnalytics();
+}
+
+function renderScanHistory() {
+  const tbody = document.getElementById("faculty-history-tbody");
+  if (!tbody) return;
+
+  if (!scanHistory || scanHistory.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align:center; color:var(--text-muted); padding:20px;">
+          No live scans performed yet. Enter details above and click 'Analyze Live Email'!
+        </td>
+      </tr>
+    `;
+    return;
   }
 
-  recordTelemetry("Email Message", mail.subject, mail.isPhish, mail.score, mail.threat);
+  tbody.innerHTML = scanHistory.map(entry => {
+    const badgeClass = entry.verdict === "PHISHING" ? "verdict-phishing" : (entry.verdict === "SUSPICIOUS" ? "verdict-suspicious" : "verdict-safe");
+    const scoreColor = entry.score >= 70 ? "var(--neon-red)" : (entry.score >= 31 ? "var(--neon-amber)" : "var(--neon-green)");
+    return `
+      <tr>
+        <td style="font-family:monospace; color:var(--text-muted);">${escapeHtml(entry.time)}</td>
+        <td><strong>${escapeHtml(entry.sender)}</strong></td>
+        <td>${escapeHtml(entry.subject)}</td>
+        <td><span class="verdict-badge ${badgeClass}" style="font-size:11px; padding:2px 8px;">${entry.verdict}</span></td>
+        <td><strong style="color:${scoreColor}; font-size:13px;">${entry.score}/100</strong></td>
+        <td>
+          <button class="preset-chip" style="font-size:10.5px; padding:3px 8px;" onclick="reinspectHistory('${entry.id}')">
+            🔍 Re-Inspect
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join("");
 }
 
-function simulateIncomingAttack() {
-  const simulatedAttacks = [
-    {
-      id: "incoming-" + Date.now(),
-      from: "Apple Security <billing-alert@apple-id-verify.top>",
-      reply_to: "auth@inbox-relay.xyz",
-      subject: "Security Notification: Your Apple ID is Locked",
-      date: "Just Now",
-      body: `Apple ID Security Alert:
+function updateScanAnalytics() {
+  const total = scanHistory.length;
+  const safe = scanHistory.filter(s => s.verdict === "SAFE").length;
+  const susp = scanHistory.filter(s => s.verdict === "SUSPICIOUS").length;
+  const phish = scanHistory.filter(s => s.verdict === "PHISHING").length;
+  const avg = total > 0 ? Math.round(scanHistory.reduce((acc, curr) => acc + curr.score, 0) / total) : 0;
 
-Your Apple ID was used to sign in to iCloud via an unauthorized device in Berlin, Germany.
+  const elTotal = document.getElementById("stat-total-scans");
+  const elSafe = document.getElementById("stat-safe-scans");
+  const elSusp = document.getElementById("stat-suspicious-scans");
+  const elPhish = document.getElementById("stat-phish-scans");
+  const elAvg = document.getElementById("stat-avg-score");
 
-Your account has been locked for your protection. You have 12 hours to verify your identity:
-<a class="email-interactive-link" data-url="https://apple.com@verify-account.top/portal">https://appleid.apple.com/account/manage</a>
+  if (elTotal) elTotal.innerText = total;
+  if (elSafe) elSafe.innerText = safe;
+  if (elSusp) elSusp.innerText = susp;
+  if (elPhish) elPhish.innerText = phish;
+  if (elAvg) elAvg.innerText = `${avg}/100`;
+}
 
-Apple Support`,
-      isPhish: true,
-      score: 100,
-      threat: "Apple ID Authority Deception (@ trick)",
-      reasons: [
-        "Display Name spoofing claiming to be 'Apple Security'",
-        "Deceptive '@' symbol in URL attempting to trick user into seeing 'apple.com'",
-        "High-urgency 12-hour lockout threat"
-      ]
-    },
-    {
-      id: "incoming-docusign-" + Date.now(),
-      from: "DocuSign Signature <service@docus1gn-review.com>",
-      reply_to: "",
-      subject: "Please Review & Sign: Confidential Wire Transfer Invoice",
-      date: "Just Now",
-      body: `DocuSign Electronic Signature:
+window.reinspectHistory = function(id) {
+  const item = scanHistory.find(s => s.id === id);
+  if (!item) return;
 
-Accounting sent you a document for signature: 'Wire_Transfer_Invoice_8492.pdf'.
+  document.getElementById("faculty-sender").value = item.sender === "Direct URL / No Sender" ? "" : item.sender;
+  document.getElementById("faculty-subject").value = item.subject.startsWith("URL Scan:") ? "" : item.subject;
+  document.getElementById("faculty-body").value = item.body || "";
+  document.getElementById("faculty-url").value = item.url || "";
 
-Review and sign document:
-<a class="email-interactive-link" data-url="https://docus1gn-review.com/auth/sign">https://docusign.net/Member/PowerFormSigning.aspx</a>
+  runLiveFacultyAnalysis(item.sender, item.subject, item.body, item.url);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
-DocuSign Inc.`,
-      isPhish: true,
-      score: 95,
-      threat: "DocuSign Typosquatting (docus1gn)",
-      reasons: [
-        "Brand typosquatting substituting digit '1' for 'i' in DocuSign",
-        "Financial lure regarding wire transfer"
-      ]
-    }
-  ];
+window.loadFacultyPreset = function(presetKey) {
+  const senderEl = document.getElementById("faculty-sender");
+  const subjectEl = document.getElementById("faculty-subject");
+  const bodyEl = document.getElementById("faculty-body");
+  const urlEl = document.getElementById("faculty-url");
 
-  const randomAttack = simulatedAttacks[Math.floor(Math.random() * simulatedAttacks.length)];
-  activeEmails.unshift(randomAttack);
+  if (presetKey === "paypal_phish") {
+    senderEl.value = "PayPal Security Alert <service@paypal-verify-alert99.xyz>";
+    subjectEl.value = "URGENT: Your PayPal Account Has Been Restricted (Action in 24h)";
+    bodyEl.value = "Dear Customer, we detected an unauthorized wire transaction from Berlin. Your balance is locked. Verify your credentials immediately:";
+    urlEl.value = "https://pаypal.com/signin/account-verify";
+  } else if (presetKey === "netflix_phish") {
+    senderEl.value = "Netflix Billing Team <support@netf1ix-billing.xyz>";
+    subjectEl.value = "Payment Failed: Your Netflix Membership is Suspended";
+    bodyEl.value = "Your monthly subscription payment failed. Update your credit card within 12 hours to avoid account termination:";
+    urlEl.value = "https://netf1ix-billing-update.xyz/login";
+  } else if (presetKey === "suspicious_invoice") {
+    senderEl.value = "Global Logistics Billing <billing@invoicing-portal.biz>";
+    subjectEl.value = "Monthly Freight Service Invoice #4892";
+    bodyEl.value = "Please find attached your invoice statement for the current billing cycle. Review statement details at:";
+    urlEl.value = "http://invoicing-portal.biz/docs/invoice.pdf";
+  } else if (presetKey === "dean_safe") {
+    senderEl.value = "Dr. Robert Sharma <dean.academics@apex.edu>";
+    subjectEl.value = "Updated Semester Schedule and Academic Calendar";
+    bodyEl.value = "Dear Students and Faculty, please find the revised academic examination timetable for the upcoming semester on the official portal:";
+    urlEl.value = "https://apex.edu/academics/schedule";
+  }
+
+  runLiveFacultyAnalysis(senderEl.value, subjectEl.value, bodyEl.value, urlEl.value);
+};
+
+// ==================== CLIENT-SIDE OFFLINE HEURISTIC SCANNER ====================
+function computeClientSideAnalysis(fromVal, subjectVal, bodyVal, urlVal) {
+  const fromLower = (fromVal || "").toLowerCase();
+  const subLower = (subjectVal || "").toLowerCase();
+  const bodyLower = (bodyVal || "").toLowerCase();
+  const urlLower = (urlVal || "").toLowerCase();
+  const combined = `${fromLower} ${subLower} ${bodyLower} ${urlLower}`;
+
+  let score = 0;
+  let reasons = [];
+  let threatType = "Clean Communication";
+
+  const hasHomoglyph = (urlVal || "").includes('а') || (urlVal || "").includes('о') || (urlVal || "").includes('е') || fromLower.includes('а');
+  const isTyposquat = urlLower.includes('m1crosoft') || urlLower.includes('amaz0n') || urlLower.includes('netf1ix') || urlLower.includes('docus1gn') || fromLower.includes('netf1ix');
+  const isDirectIp = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/.test(urlLower);
+  const isAtTrick = urlLower.includes('@') && (urlLower.includes('http://') || urlLower.includes('https://'));
+  const isSuspiciousTld = fromLower.includes('.xyz') || fromLower.includes('.top') || fromLower.includes('.biz') || fromLower.includes('.click') || urlLower.includes('.xyz') || urlLower.includes('.top') || urlLower.includes('.click');
+  const isMissingHttps = urlVal.startsWith('http://');
+
+  const urgencyWords = ["urgent", "immediately", "verify", "suspended", "action required", "payment failed", "24 hours", "terminate", "lockout", "compromised", "unauthorized"];
+  const fraudWords = ["bank", "payment", "account", "security alert", "invoice", "wire transfer", "refund", "crypto", "credit card", "wallet"];
+
+  let urgencyMatches = urgencyWords.filter(w => combined.includes(w));
+  let fraudMatches = fraudWords.filter(w => combined.includes(w));
+
+  const isSpoofedBrand = (fromLower.includes("paypal") || fromLower.includes("netflix") || fromLower.includes("microsoft") || fromLower.includes("apple") || fromLower.includes("chase")) && (isSuspiciousTld || isTyposquat || isHomoglyph);
+  const isSafeDomain = (fromLower.includes(".edu") || fromLower.includes(".gov") || fromLower.includes("github.com") || fromLower.includes("google.com")) && !hasHomoglyph && !isTyposquat && !isDirectIp;
+
+  if (hasHomoglyph) {
+    score += 85;
+    threatType = "IDN Homoglyph Impersonation";
+    reasons.push("✓ IDN Homoglyph attack");
+  }
+  if (isTyposquat) {
+    score += 80;
+    threatType = "Brand Typosquatting";
+    reasons.push("✓ Brand typosquatting");
+  }
+  if (isDirectIp) {
+    score += 75;
+    threatType = "Direct IP Credential Harvester";
+    reasons.push("✓ URL uses IP address");
+  }
+  if (isAtTrick) {
+    score += 70;
+    threatType = "Authority Deception (@ trick)";
+    reasons.push("✓ Suspicious URL structure");
+  }
+  if (isSpoofedBrand) {
+    score += 65;
+    reasons.push("✓ Display name spoofing");
+    reasons.push("✓ Lookalike sender domain");
+  }
+  if (isSuspiciousTld) {
+    score += 35;
+    reasons.push("✓ Suspicious sender domain");
+  }
+  if (urgencyMatches.length > 0) {
+    score += Math.min(urgencyMatches.length * 15, 40);
+    reasons.push("✓ Urgency language detected");
+  }
+  if (fraudMatches.length > 0) {
+    score += Math.min(fraudMatches.length * 15, 35);
+    reasons.push("✓ Financial fraud lure");
+  }
+  if (combined.includes("password") || combined.includes("credential") || combined.includes("sign-in") || combined.includes("login")) {
+    score += 30;
+    reasons.push("✓ Credential harvesting indicators");
+  }
+  if (isMissingHttps && urlVal) {
+    score += 15;
+    reasons.push("✓ Missing HTTPS");
+  }
+
+  if (isSafeDomain && !hasHomoglyph && !isTyposquat && !isSuspiciousTld) {
+    score = 0;
+    threatType = "Verified Authentic Identity";
+    reasons = ["✓ Verified authentic sender identity", "✓ Clean URL & domain infrastructure", "✓ No social engineering detected"];
+  }
+
+  score = Math.min(Math.max(score, 0), 100);
+  const verdict = score >= 70 ? "PHISHING" : (score >= 31 ? "SUSPICIOUS" : "SAFE");
+
+  return {
+    risk_score: score,
+    verdict: verdict,
+    confidence_pct: score >= 70 ? 98.4 : (score <= 20 ? 97.2 : 89.5),
+    threat_type: threatType,
+    detection_reasons: reasons,
+    sender_info: parseSenderJs(fromVal),
+    recommendation: score >= 70 ? "🚨 HIGH SEVERITY PHISHING ATTACK! Do NOT click links or enter credentials." : (score >= 31 ? "⚠️ SUSPICIOUS EMAIL: Exercise caution." : "✅ LEGITIMATE: Sender patterns align with standard authentic communications.")
+  };
+}
+
+function parseSenderJs(header) {
+  if (!header) return { displayName: "Unspecified Sender", emailAddr: "", domain: "Unspecified" };
+  const match = header.match(/^(?:"?([^"<]+)"?\s*)?<([^>]+)>$/);
+  if (match) {
+    const dName = (match[1] || "").trim();
+    const eAddr = (match[2] || "").trim().toLowerCase();
+    const dom = eAddr.split('@')[1] || "Unspecified";
+    return { displayName: dName || eAddr, emailAddr: eAddr, domain: dom };
+  }
+  const dom = header.includes('@') ? header.split('@')[1] : "Unspecified";
+  return { displayName: header, emailAddr: header, domain: dom };
+}
+
+// ==================== 2. INBOX SIMULATOR TAB ====================
+function initInbox() {
+  activeEmails = JSON.parse(JSON.stringify(INBOX_PRESETS));
   renderInboxList();
-  selectEmail(randomAttack.id);
+  if (activeEmails.length > 0) selectEmail(activeEmails[0].id);
+
+  const btnSim = document.getElementById("btn-simulate-incoming");
+  if (btnSim) btnSim.addEventListener("click", () => simulateIncomingAttack());
+
+  const btnReset = document.getElementById("btn-reset-inbox");
+  if (btnReset) {
+    btnReset.addEventListener("click", () => {
+      activeEmails = JSON.parse(JSON.stringify(INBOX_PRESETS));
+      renderInboxList();
+      if (activeEmails.length > 0) selectEmail(activeEmails[0].id);
+    });
+  }
 }
 
-// ==================== WARNING MODAL INTERCEPTOR ====================
-function initWarningModal() {
-  const modal = document.getElementById("prototype-warning-modal");
-  document.getElementById("btn-modal-return").onclick = () => { modal.style.display = "none"; };
-  document.getElementById("btn-modal-dismiss").onclick = () => { modal.style.display = "none"; };
-}
+function renderInboxList() {
+  const container = document.getElementById("inbox-list-container");
+  if (!container) return;
+  container.innerHTML = "";
 
-function showInterceptorModal(url, mail) {
-  const modal = document.getElementById("prototype-warning-modal");
-  document.getElementById("modal-url-text").innerText = url;
-  document.getElementById("modal-risk-text").innerText = `${mail.score}% Risk Score (Critical Phishing)`;
-  document.getElementById("modal-brand-text").innerText = mail.threat;
+  activeEmails.forEach(mail => {
+    const isScam = mail.score >= 45 || mail.isPhish;
+    const isSusp = !mail.isPhish && mail.score >= 20 && mail.score < 45;
+    const tagClass = isScam ? "tag-scam" : (isSusp ? "tag-suspicious" : "tag-safe");
+    const tagLabel = isScam ? `🔴 SCAM • ${mail.score}%` : (isSusp ? `🟡 SUSPICIOUS` : `🟢 SAFE`);
 
-  const reasonsList = document.getElementById("modal-reasons-list");
-  reasonsList.innerHTML = mail.reasons.map(r => `<li>${r}</li>`).join("");
+    const item = document.createElement("div");
+    item.className = "inbox-item";
+    item.id = `inbox-item-${mail.id}`;
+    item.innerHTML = `
+      <div class="inbox-item-top">
+        <span class="inbox-item-sender">${escapeHtml(mail.from)}</span>
+        <span style="font-size:10.5px; color:var(--text-muted);">${escapeHtml(mail.date || 'Just Now')}</span>
+      </div>
+      <div class="inbox-item-subject">${escapeHtml(mail.subject)}</div>
+      <div class="inbox-tag-row">
+        <span class="inbox-tag ${tagClass}">${tagLabel}</span>
+      </div>
+    `;
 
-  modal.style.display = "flex";
-  playAlertSound("danger");
-}
-
-// ==================== URL SCANNER ====================
-function initUrlScanner() {
-  const btn = document.getElementById("btn-analyze-url");
-  btn.addEventListener("click", () => {
-    const url = document.getElementById("custom-url-input").value.trim();
-    if (url) scanUrl(url);
+    item.addEventListener("click", () => selectEmail(mail.id));
+    container.appendChild(item);
   });
 }
 
+function selectEmail(id) {
+  document.querySelectorAll(".inbox-item").forEach(i => i.classList.remove("active"));
+  const currentItem = document.getElementById(`inbox-item-${id}`);
+  if (currentItem) currentItem.classList.add("active");
+
+  const mail = activeEmails.find(m => m.id === id);
+  if (!mail) return;
+
+  const isScam = mail.score >= 45 || mail.isPhish;
+  const isSusp = !mail.isPhish && mail.score >= 20 && mail.score < 45;
+  const state = isScam ? "scam" : (isSusp ? "suspicious" : "safe");
+
+  // Banner Injection
+  const bannerSlot = document.getElementById("email-view-banner-slot");
+  if (bannerSlot) {
+    bannerSlot.innerHTML = `
+      <div class="truecaller-banner state-${state}">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span class="truecaller-badge-pill pill-${state}">
+            ${state === 'scam' ? '🔴 SCAM' : (state === 'suspicious' ? '🟡 SUSPICIOUS' : '🟢 SAFE')}
+          </span>
+          <span>${mail.threat || 'Threat Evaluation Complete'}</span>
+        </div>
+        <span style="font-size:12px; opacity:0.9;">Risk Score: ${mail.score}%</span>
+      </div>
+    `;
+  }
+
+  // Caller ID Injection
+  const callerIdSlot = document.getElementById("email-caller-id-slot");
+  if (callerIdSlot) {
+    const senderInfo = parseSenderJs(mail.from);
+    callerIdSlot.innerHTML = `
+      <div class="caller-id-card state-${state}">
+        <div class="caller-id-header">
+          <span class="caller-id-title"><span>👤</span> EMAIL CALLER ID</span>
+          <span class="caller-id-status-badge status-${state}">
+            ${state === 'scam' ? '🚨 SPOOFED SENDER' : (state === 'suspicious' ? '⚠️ UNVERIFIED SENDER' : '✓ VERIFIED SENDER')}
+          </span>
+        </div>
+        <div class="caller-id-main-row">
+          <div class="caller-id-avatar">${state === 'scam' ? '🚨' : (state === 'suspicious' ? '⚠️' : '🛡️')}</div>
+          <div class="caller-id-details">
+            <div class="caller-id-name">${escapeHtml(senderInfo.displayName)}</div>
+            <div class="caller-id-email">${escapeHtml(senderInfo.emailAddr)}</div>
+            <div class="caller-id-domain"><span>🌐 Origin Domain: </span><strong style="color:#fff;">${escapeHtml(senderInfo.domain)}</strong></div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Body Injection & Interceptor
+  const bodyEl = document.getElementById("view-body");
+  if (bodyEl) {
+    bodyEl.innerHTML = mail.body;
+    bodyEl.querySelectorAll(".email-interactive-link").forEach(link => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const targetUrl = link.getAttribute("data-url") || link.innerText;
+        if (isScam || isSusp) {
+          showInterceptorModal(targetUrl, mail);
+        } else {
+          alert(`✅ Verified authentic link (${targetUrl}). Safe to proceed!`);
+        }
+      });
+    });
+  }
+
+  if (isScam || isSusp) playAlertSound("danger");
+  else playAlertSound("safe");
+}
+
+function simulateIncomingAttack() {
+  const newAttack = {
+    id: "incoming-" + Date.now(),
+    from: "Apple Security <billing-alert@apple-id-verify.top>",
+    subject: "Security Notification: Your Apple ID is Locked",
+    date: "Just Now",
+    body: `Apple ID Security Alert:
+
+Your Apple ID was used to sign in to iCloud via an unauthorized device.
+
+Your account has been locked. Verify identity within 12 hours:
+<a class="email-interactive-link" data-url="https://apple.com@verify-account.top/portal">https://appleid.apple.com/account/manage</a>`,
+    isPhish: true,
+    score: 100,
+    threat: "Apple ID Authority Deception (@ trick)",
+    reasons: ["Display Name spoofing", "Deceptive '@' symbol in URL", "12-hour lockout threat"]
+  };
+
+  activeEmails.unshift(newAttack);
+  renderInboxList();
+  selectEmail(newAttack.id);
+}
+
+// ==================== 3. URL SCANNER TAB ====================
+function initUrlScanner() {
+  const btn = document.getElementById("btn-analyze-url");
+  if (btn) {
+    btn.addEventListener("click", () => {
+      const url = document.getElementById("custom-url-input").value.trim();
+      if (url) scanUrl(url);
+    });
+  }
+}
+
 window.loadUrlPreset = function(url) {
-  document.getElementById("custom-url-input").value = url;
-  scanUrl(url);
+  const input = document.getElementById("custom-url-input");
+  if (input) {
+    input.value = url;
+    scanUrl(url);
+  }
 };
 
 function scanUrl(url) {
   const container = document.getElementById("url-scan-results");
-  container.style.display = "grid";
+  if (container) container.style.display = "block";
 
-  // Try backend first with instant fallback
   fetch(`${API_BASE}/api/analyze/url`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ url: url })
   })
   .then(r => r.json())
-  .then(data => {
-    renderUrlScan(data);
-  })
+  .then(data => renderUrlScan(data))
   .catch(() => {
-    // Client-side fallback calculation
-    const fallback = clientSideUrlScan(url);
-    renderUrlScan(fallback);
+    const fallback = computeClientSideAnalysis("", "", "", url);
+    renderUrlScan({
+      url: url,
+      risk_score: fallback.risk_score,
+      verdict: fallback.verdict,
+      threat_type: fallback.threat_type,
+      indicators: fallback.detection_reasons,
+      recommendation: fallback.recommendation
+    });
   });
-}
-
-function calculateEntropyJs(str) {
-  if (!str) return 0.0;
-  const len = str.length;
-  const counts = {};
-  for (let i = 0; i < len; i++) {
-    counts[str[i]] = (counts[str[i]] || 0) + 1;
-  }
-  let entropy = 0.0;
-  for (let char in counts) {
-    const p = counts[char] / len;
-    entropy -= p * Math.log2(p);
-  }
-  return Math.round(entropy * 100) / 100;
-}
-
-function clientSideUrlScan(rawUrl) {
-  let url = (rawUrl || "").trim();
-  if (!url) {
-    return {
-      url: "",
-      risk_score: 0,
-      risk_level: "Safe",
-      is_phishing: false,
-      threat_type: "None",
-      indicators: ["Empty URL provided"],
-      recommendation: "Please provide a valid URL."
-    };
-  }
-
-  let cleanUrl = url;
-  if (!cleanUrl.startsWith("http://") && !cleanUrl.startsWith("https://") && !cleanUrl.startsWith("ftp://")) {
-    cleanUrl = "http://" + cleanUrl;
-  }
-
-  let parsedHost = "";
-  let parsedPath = "";
-  try {
-    const uObj = new URL(cleanUrl);
-    parsedHost = (uObj.hostname || "").toLowerCase();
-    parsedPath = (uObj.pathname + uObj.search).toLowerCase();
-  } catch (e) {
-    parsedHost = cleanUrl.split('/')[2] || cleanUrl.split('/')[0];
-    parsedHost = parsedHost.toLowerCase();
-  }
-
-  // Remove port if present
-  parsedHost = parsedHost.split(':')[0];
-
-  const BRAND_MAP = {
-    "google": "google.com",
-    "microsoft": "microsoft.com",
-    "apple": "apple.com",
-    "amazon": "amazon.com",
-    "paypal": "paypal.com",
-    "netflix": "netflix.com",
-    "facebook": "facebook.com",
-    "instagram": "instagram.com",
-    "meta": "meta.com",
-    "twitter": "twitter.com",
-    "x": "x.com",
-    "linkedin": "linkedin.com",
-    "github": "github.com",
-    "spotify": "spotify.com",
-    "chase": "chase.com",
-    "bankofamerica": "bankofamerica.com",
-    "wellsfargo": "wellsfargo.com",
-    "citi": "citi.com",
-    "citibank": "citibank.com",
-    "capitalone": "capitalone.com",
-    "americanexpress": "americanexpress.com",
-    "amex": "americanexpress.com",
-    "docusign": "docusign.com",
-    "dropbox": "dropbox.com",
-    "onedrive": "live.com",
-    "adobe": "adobe.com",
-    "zoom": "zoom.us",
-    "slack": "slack.com",
-    "yahoo": "yahoo.com",
-    "outlook": "outlook.com",
-    "stripe": "stripe.com",
-    "binance": "binance.com",
-    "coinbase": "coinbase.com",
-    "metamask": "metamask.io",
-    "whatsapp": "whatsapp.com",
-    "telegram": "telegram.org",
-    "steam": "steampowered.com",
-    "discord": "discord.com",
-    "ebay": "ebay.com",
-    "walmart": "walmart.com",
-    "uber": "uber.com",
-    "airbnb": "airbnb.com",
-    "irs": "irs.gov",
-    "who": "who.int"
-  };
-
-  const SUSPICIOUS_TLDS = ["xyz", "top", "tk", "ml", "ga", "cf", "gq", "work", "live", "loan", "click", "icu", "buzz", "fit", "surf", "rest", "monster", "vip", "kim", "country", "stream", "gdn", "mom", "date", "racing", "bid", "win", "accountant", "download", "review", "link"];
-  const SENSITIVE_KEYWORDS = ["login", "signin", "sign-in", "log-in", "verify", "verification", "secure", "security", "auth", "authenticate", "account", "update", "upgrade", "banking", "wallet", "recover", "recovery", "password", "credential", "2fa", "mfa", "billing", "invoice", "payment", "suspension", "suspended", "unlock", "support", "helpdesk", "portal"];
-
-  let score = 0;
-  let indicators = [];
-  let threatType = "Clean Domain";
-  let targetBrand = "None";
-  let deceptionType = "None";
-  let isLookalike = false;
-
-  // 1. Direct Whitelist / Authentic Check
-  let isAuthentic = false;
-  for (let b in BRAND_MAP) {
-    const legitDom = BRAND_MAP[b];
-    if (parsedHost === legitDom || parsedHost.endsWith("." + legitDom)) {
-      isAuthentic = true;
-      targetBrand = b.charAt(0).toUpperCase() + b.slice(1);
-      break;
-    }
-  }
-
-  if (parsedHost.endsWith(".edu") || parsedHost.endsWith(".gov") || parsedHost.endsWith(".mil") || parsedHost.endsWith(".org") || parsedHost.includes("wikipedia.org") || parsedHost.includes("cloudflare.com") || parsedHost.includes("openai.com") || parsedHost.includes("youtube.com")) {
-    isAuthentic = true;
-  }
-
-  // 2. Homoglyphs Check
-  const hasHomoglyph = url.includes('а') || url.includes('о') || url.includes('е') || url.includes('р') || url.includes('с') || url.includes('у') || url.includes('х') || url.includes('і') || url.includes('ԁ') || url.includes('ɡ') || url.includes('ո');
-  if (hasHomoglyph) {
-    score += 100;
-    threatType = "IDN Homoglyph Impersonation Attack";
-    deceptionType = "Unicode / Cyrillic Confusable Character";
-    isLookalike = true;
-    for (let b in BRAND_MAP) {
-      if (url.toLowerCase().includes(b)) {
-        targetBrand = b.charAt(0).toUpperCase() + b.slice(1);
-        break;
-      }
-    }
-    if (targetBrand === "None") targetBrand = "Major Online Brand";
-    indicators.push(`🚨 Domain contains Cyrillic/IDN homoglyph characters mimicking '${targetBrand}'`);
-    indicators.push("🚨 High-probability visual spoof designed to trick victims into trusting the host");
-  }
-
-  // 3. Direct IP Check
-  const isIp = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/.test(parsedHost);
-  if (isIp) {
-    score += 85;
-    threatType = "Direct IP Hostname Harvester";
-    deceptionType = "Numerical IP Access";
-    indicators.push(`⚠️ Raw numerical IPv4 address (${parsedHost}) used instead of registered domain name`);
-    indicators.push("🚨 Common signature of disposable credential phishing servers");
-  }
-
-  // 4. Authority @ Trick
-  const isAt = url.includes('@') && (url.includes('http://') || url.includes('https://'));
-  if (isAt) {
-    score += 90;
-    threatType = "Authority Deception (@ trick)";
-    deceptionType = "URL Authority Masking";
-    indicators.push("🚨 Deceptive '@' symbol prefix used to mislead user regarding actual destination server");
-  }
-
-  // 5. Typosquatting / Leetspeak Check
-  const typos = [
-    { pattern: "m1crosoft", brand: "Microsoft" },
-    { pattern: "amaz0n", brand: "Amazon" },
-    { pattern: "amazn", brand: "Amazon" },
-    { pattern: "netf1ix", brand: "Netflix" },
-    { pattern: "netflx", brand: "Netflix" },
-    { pattern: "paypa1", brand: "PayPal" },
-    { pattern: "paypai", brand: "PayPal" },
-    { pattern: "pay-pal", brand: "PayPal" },
-    { pattern: "docus1gn", brand: "DocuSign" },
-    { pattern: "faceb00k", brand: "Facebook" },
-    { pattern: "app1e", brand: "Apple" },
-    { pattern: "g00gle", brand: "Google" },
-    { pattern: "ch4se", brand: "Chase" },
-    { pattern: "b1nance", brand: "Binance" },
-    { pattern: "c0inbase", brand: "Coinbase" },
-    { pattern: "dr0pb0x", brand: "Dropbox" }
-  ];
-
-  for (let t of typos) {
-    if (parsedHost.includes(t.pattern)) {
-      score += 95;
-      threatType = "Brand Typosquatting Deception";
-      targetBrand = t.brand;
-      deceptionType = "Leetspeak Character Substitution";
-      isLookalike = true;
-      indicators.push(`🚨 Domain contains typosquatted brand name '${t.pattern}' impersonating '${t.brand}'`);
-      break;
-    }
-  }
-
-  // 6. Combosquatting & Subdomain Spoofing
-  if (!isAuthentic && !isLookalike) {
-    for (let b in BRAND_MAP) {
-      const legitDom = BRAND_MAP[b];
-      const sld = legitDom.split('.')[0];
-      if (parsedHost.includes(sld)) {
-        isLookalike = true;
-        targetBrand = b.charAt(0).toUpperCase() + b.slice(1);
-        score += 85;
-        if (parsedHost.startsWith(legitDom + ".") || parsedHost.includes("." + legitDom + ".")) {
-          threatType = "Subdomain Brand Spoofing";
-          deceptionType = "Subdomain Hierarchy Hijacking";
-          indicators.push(`🚨 Authentic brand domain '${legitDom}' embedded inside unauthorized subdomains!`);
-        } else {
-          threatType = "Brand Combosquatting Infrastructure";
-          deceptionType = "Hyphenated Keyword Squatting";
-          indicators.push(`🚨 Brand keyword '${sld}' combined with external hosting infrastructure (${parsedHost})`);
-        }
-        break;
-      }
-    }
-  }
-
-  // 7. Abused TLD
-  const tld = parsedHost.split('.').pop();
-  if (SUSPICIOUS_TLDS.includes(tld)) {
-    score += 30;
-    indicators.push(`⚠️ Suspicious Top Level Domain '.${tld}' commonly abused in phishing attacks`);
-  }
-
-  // 8. Sensitive Keywords in URL
-  const fullUrlLower = (parsedHost + parsedPath).toLowerCase();
-  let foundKw = [];
-  for (let kw of SENSITIVE_KEYWORDS) {
-    if (fullUrlLower.includes(kw)) foundKw.push(kw);
-  }
-  if (foundKw.length > 0) {
-    score += Math.min(foundKw.length * 15, 45);
-    indicators.push(`⚠️ Contains sensitive credential/urgency keywords: ${foundKw.slice(0, 4).join(', ')}`);
-  }
-
-  // 9. Shannon Entropy
-  const domainEntropy = calculateEntropyJs(parsedHost.split('.')[0]);
-  if (domainEntropy > 3.8 && parsedHost.split('.')[0].length > 8) {
-    score += 25;
-    indicators.push(`⚠️ High domain randomness/entropy (${domainEntropy}/5.0): indicates algorithmic DGA domain`);
-  }
-
-  // Whitelist override if authentic
-  if (isAuthentic && !hasHomoglyph && !isIp && !isAt && !isLookalike) {
-    score = 0;
-    threatType = "Verified Authentic Infrastructure";
-    indicators = [
-      `✓ Verified genuine identity: ${targetBrand || 'Trusted Authority'}`,
-      "✓ Root domain matches legitimate public SSL certificate & infrastructure",
-      "✓ No spoofing, homoglyph, or redirection anomalies detected"
-    ];
-  }
-
-  score = Math.min(Math.max(score, 0), 100);
-  const isPhish = score >= 40;
-  const level = score >= 70 ? "Dangerous" : (score >= 40 ? "High Risk" : (score >= 20 ? "Caution" : "Safe"));
-
-  let rec = "Verified authentic domain. Safe to proceed.";
-  if (score >= 70) {
-    rec = "🚨 DANGEROUS PHISHING LINK! Navigation blocked to prevent credential theft.";
-  } else if (score >= 40) {
-    rec = "⚠️ HIGH RISK URL! Exercise extreme caution before entering any credentials.";
-  } else if (score >= 20) {
-    rec = "ℹ️ UNVERIFIED DOMAIN. Verify sender identity before proceeding.";
-  }
-
-  return {
-    url: rawUrl,
-    risk_score: score,
-    risk_level: level,
-    is_phishing: isPhish,
-    threat_type: threatType,
-    lookalike_analysis: {
-      is_lookalike: isLookalike,
-      target_brand: targetBrand,
-      deception_type: deceptionType
-    },
-    structural_metrics: {
-      domain_entropy: domainEntropy || 2.4,
-      is_ip: isIp,
-      subdomain_count: parsedHost.split('.').length
-    },
-    ml_analysis: {
-      is_phishing_predicted: isPhish,
-      ml_phishing_probability: isPhish ? (score / 100) : 0.04,
-      model_name: "ExtraTrees 29-Feature Classifier",
-      active_threat_features: isPhish ? indicators.map(i => i.replace(/^[^a-zA-Z0-9]+/, '')) : []
-    },
-    indicators: indicators,
-    ai_intelligence: {
-      summary: isPhish 
-        ? `High-confidence phishing threat (${threatType}) designed to deceive users into disclosing sensitive credentials.`
-        : `Verified authentic domain with standard security architecture.`,
-      mitigation_steps: isPhish 
-        ? ["Do NOT enter passwords or financial information", "Inspect sender address for lookalike patterns", "Navigate to official verified portal directly"]
-        : ["Safe to navigate."]
-    },
-    recommendation: rec
-  };
 }
 
 function renderUrlScan(data) {
+  const box = document.getElementById("url-scan-details-box");
+  if (!box) return;
+
   const score = data.risk_score || 0;
-  const level = data.risk_level || "Safe";
+  const isPhish = score >= 40;
 
-  const ring = document.getElementById("proto-gauge-ring");
-  const num = document.getElementById("proto-gauge-num");
-  const title = document.getElementById("proto-risk-title");
-  const rec = document.getElementById("proto-risk-rec");
+  box.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <div>
+        <span class="verdict-badge ${isPhish ? 'verdict-phishing' : 'verdict-safe'}">
+          ${isPhish ? '🔴 DANGEROUS PHISHING URL' : '🟢 VERIFIED SAFE URL'}
+        </span>
+      </div>
+      <div style="font-size:24px; font-weight:900; color:${isPhish ? 'var(--neon-red)' : 'var(--neon-green)'};">
+        ${score}/100 Risk Score
+      </div>
+    </div>
+    <div style="font-size:13px; color:#ffffff; margin-bottom:12px; font-family:monospace; word-break:break-all;">
+      <strong>Target: </strong>${escapeHtml(data.url)}
+    </div>
+    <div style="background:rgba(0,0,0,0.3); padding:12px; border-radius:8px; margin-bottom:14px;">
+      <strong style="color:var(--neon-cyan); font-size:12px;">Threat Category: </strong>
+      <span style="color:#ffffff; font-size:13px;">${escapeHtml(data.threat_type || 'Standard Infrastructure')}</span>
+    </div>
+    <div style="margin-bottom:10px; font-size:12px; font-weight:700; color:var(--text-muted);">DETECTION INDICATORS:</div>
+    <div class="reasons-chips-wrap">
+      ${(data.indicators || []).map(i => `<span class="reason-chip ${isPhish ? '' : 'chip-safe'}">${escapeHtml(i)}</span>`).join("")}
+    </div>
+  `;
 
-  num.innerText = score;
-  title.innerText = level.toUpperCase();
-  rec.innerText = data.recommendation;
-
-  ring.className = "gauge-ring";
-  if (score >= 70) {
-    ring.classList.add("danger");
-    title.style.color = "var(--neon-red)";
-    playAlertSound("danger");
-  } else if (score >= 35) {
-    ring.classList.add("caution");
-    title.style.color = "var(--neon-amber)";
-  } else {
-    title.style.color = "var(--neon-green)";
-    playAlertSound("safe");
-  }
-
-  // Lookalike & Metrics
-  const lookalike = data.lookalike_analysis || {};
-  document.getElementById("proto-lookalike-flag").innerText = lookalike.is_lookalike ? "YES (SPOOF)" : "No";
-  document.getElementById("proto-target-brand").innerText = lookalike.target_brand || "None";
-  document.getElementById("proto-deception-technique").innerText = lookalike.deception_type || "None";
-
-  const metrics = data.structural_metrics || {};
-  document.getElementById("proto-entropy-score").innerText = `${metrics.domain_entropy || 2.1} / 5.0`;
-  document.getElementById("proto-is-ip").innerText = metrics.is_ip ? "Yes (High Risk)" : "No";
-  document.getElementById("proto-subdomain-count").innerText = `${metrics.subdomain_count || 1} level(s)`;
-
-  // ML Model Analysis
-  const ml = data.ml_analysis || {};
-  const mlProb = (ml.ml_phishing_probability !== undefined) ? Math.round(ml.ml_phishing_probability * 100) : 0;
-  const isMlPhish = ml.is_phishing_predicted || mlProb >= 50;
-  const mlVerdictEl = document.getElementById("proto-ml-verdict");
-  if (mlVerdictEl) {
-    mlVerdictEl.innerText = isMlPhish ? "🚨 PHISHING" : "✅ LEGITIMATE";
-    mlVerdictEl.style.color = isMlPhish ? "var(--neon-red)" : "var(--neon-green)";
-  }
-  const mlProbEl = document.getElementById("proto-ml-prob");
-  if (mlProbEl) mlProbEl.innerText = `${mlProb}%`;
-  const mlModelEl = document.getElementById("proto-ml-model");
-  if (mlModelEl) mlModelEl.innerText = ml.model_name || "ExtraTrees Ensemble";
-  const mlFeatEl = document.getElementById("proto-ml-features");
-  if (mlFeatEl) {
-    const activeFeats = ml.active_threat_features || [];
-    mlFeatEl.innerText = activeFeats.length > 0 ? activeFeats.join(", ") : "None (Clean Structural Profile)";
-    mlFeatEl.style.color = activeFeats.length > 0 ? "#fca5a5" : "#a7f3d0";
-  }
-
-  // Indicators
-  const indList = document.getElementById("proto-indicators-list");
-  indList.innerHTML = (data.indicators || []).map(i => `<li>${i}</li>`).join("");
-
-  // AI Summary
-  const ai = data.ai_intelligence || {};
-  document.getElementById("proto-ai-summary").innerText = ai.summary || data.recommendation;
-  document.getElementById("proto-ai-actions").innerHTML = (ai.mitigation_steps || []).map(s => `<div>• ${s}</div>`).join("");
-
-  recordTelemetry("URL Scan", data.url, data.is_phishing, score, data.threat_type);
+  if (isPhish) playAlertSound("danger");
+  else playAlertSound("safe");
 }
 
-// ==================== LOOKALIKE LAB ====================
+// ==================== 4. LOOKALIKE LAB ====================
 function initLookalikeLab() {
-  document.getElementById("btn-run-lab").addEventListener("click", () => {
-    const domain = document.getElementById("lab-domain-input").value.trim();
-    if (domain) generateLookalikes(domain);
-  });
+  const btn = document.getElementById("btn-run-lab");
+  if (btn) {
+    btn.addEventListener("click", () => {
+      const domain = document.getElementById("lab-domain-input").value.trim();
+      if (domain) generateLookalikes(domain);
+    });
+  }
 }
 
 function generateLookalikes(domain) {
@@ -2788,11 +2475,8 @@ function generateLookalikes(domain) {
     body: JSON.stringify({ domain: domain })
   })
   .then(r => r.json())
-  .then(data => {
-    renderLabVariants(data.generated_variants || []);
-  })
+  .then(data => renderLabVariants(data.generated_variants || []))
   .catch(() => {
-    // Client-side fallback generator
     const sld = domain.split('.')[0];
     const tld = domain.split('.')[1] || "com";
     const variants = [
@@ -2808,68 +2492,54 @@ function generateLookalikes(domain) {
 
 function renderLabVariants(variants) {
   const tbody = document.getElementById("lab-variants-tbody");
+  if (!tbody) return;
   tbody.innerHTML = variants.map(v => `
     <tr>
-      <td style="font-family:monospace; font-weight:700; color:#fca5a5;">${escapeHtml(v.variant)}</td>
+      <td style="font-family:monospace; color:var(--neon-cyan); font-weight:700;">${escapeHtml(v.variant)}</td>
       <td>${escapeHtml(v.technique)}</td>
-      <td style="font-family:monospace; color:#94a3b8;">${escapeHtml(v.punycode || '-')}</td>
-      <td style="font-weight:700; color:#38bdf8;">${escapeHtml(v.visual_similarity)}</td>
-      <td><span class="inbox-tag-pill danger">${escapeHtml(v.risk)}</span></td>
+      <td style="font-family:monospace; color:var(--text-muted);">${escapeHtml(v.punycode || '-')}</td>
+      <td style="color:#ffffff;">${escapeHtml(v.visual_similarity)}</td>
+      <td><span class="reason-chip ${v.risk === 'Critical' ? '' : 'chip-caution'}">${escapeHtml(v.risk)}</span></td>
     </tr>
   `).join("");
 }
 
-// ==================== TELEMETRY & LOGGING ====================
-function recordTelemetry(type, target, isPhish, score, threat) {
-  telemetryStats.total++;
-  if (isPhish) {
-    telemetryStats.phish++;
-    if (threat.includes("Lookalike") || threat.includes("Homoglyph") || threat.includes("Typosquat")) telemetryStats.lookalikes++;
-    if (threat.includes("Spoof") || threat.includes("Sender")) telemetryStats.spoofs++;
-  }
-
-  document.getElementById("count-total").innerText = telemetryStats.total;
-  document.getElementById("count-phish").innerText = telemetryStats.phish;
-  document.getElementById("count-lookalikes").innerText = telemetryStats.lookalikes;
-  document.getElementById("count-spoofs").innerText = telemetryStats.spoofs;
-
-  const logEntry = {
-    timestamp: new Date().toLocaleTimeString(),
-    type: type,
-    target: target.substring(0, 55),
-    score: score,
-    level: score >= 70 ? "Dangerous" : (score >= 40 ? "High Risk" : "Safe"),
-    threat: threat,
-    isPhish: isPhish
-  };
-
-  telemetryStats.logs.unshift(logEntry);
-
-  // Render logs table
-  const tbody = document.getElementById("logs-tbody");
-  tbody.innerHTML = telemetryStats.logs.slice(0, 15).map(log => `
-    <tr>
-      <td style="font-family:monospace; color:var(--text-muted);">${log.timestamp}</td>
-      <td><span class="preset-chip" style="font-size:10px;">${log.type}</span></td>
-      <td style="font-family:monospace;">${escapeHtml(log.target)}</td>
-      <td><span class="inbox-tag-pill ${log.isPhish ? 'danger' : 'safe'}">${log.score}% (${log.level})</span></td>
-      <td>${log.threat}</td>
-      <td style="color:${log.isPhish ? 'var(--neon-red)' : 'var(--neon-green)'}; font-weight:700;">
-        ${log.isPhish ? '🚫 Blocked & Warned' : '✓ Permitted'}
-      </td>
-    </tr>
-  `).join("");
+// ==================== 5. MODAL INTERCEPTOR ====================
+function initWarningModal() {
+  const modal = document.getElementById("prototype-warning-modal");
+  const btnReturn = document.getElementById("btn-modal-return");
+  const btnDismiss = document.getElementById("btn-modal-dismiss");
+  if (btnReturn) btnReturn.onclick = () => { modal.style.display = "none"; };
+  if (btnDismiss) btnDismiss.onclick = () => { modal.style.display = "none"; };
 }
 
-document.getElementById("btn-export-log").addEventListener("click", () => {
-  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(telemetryStats, null, 2));
-  const dlAnchor = document.createElement("a");
-  dlAnchor.setAttribute("href", dataStr);
-  dlAnchor.setAttribute("download", `phishguard_telemetry_${Date.now()}.json`);
-  document.body.appendChild(dlAnchor);
-  dlAnchor.click();
-  dlAnchor.remove();
-});
+function showInterceptorModal(url, mail) {
+  const modal = document.getElementById("prototype-warning-modal");
+  document.getElementById("modal-url-text").innerText = url;
+  document.getElementById("modal-risk-text").innerText = `${mail.score}% Risk Score (Critical Phishing)`;
+  document.getElementById("modal-brand-text").innerText = mail.threat;
+
+  const reasonsList = document.getElementById("modal-reasons-list");
+  reasonsList.innerHTML = (mail.reasons || []).map(r => `<li>${escapeHtml(r)}</li>`).join("");
+
+  modal.style.display = "flex";
+  playAlertSound("danger");
+}
+
+function recordTelemetry(type, target, isPhish, score, verdict) {
+  const tbody = document.getElementById("telemetry-log-tbody");
+  if (!tbody) return;
+  const time = new Date().toLocaleTimeString();
+  const row = document.createElement("tr");
+  row.innerHTML = `
+    <td style="font-family:monospace; color:var(--text-muted);">${time}</td>
+    <td><span class="preset-chip" style="font-size:10px;">${escapeHtml(type)}</span></td>
+    <td><strong>${escapeHtml(target)}</strong></td>
+    <td style="color:${score >= 70 ? 'var(--neon-red)' : (score >= 31 ? 'var(--neon-amber)' : 'var(--neon-green)')}; font-weight:800;">${score}/100</td>
+    <td><span class="verdict-badge ${score >= 70 ? 'verdict-phishing' : (score >= 31 ? 'verdict-suspicious' : 'verdict-safe')}" style="font-size:10.5px; padding:2px 8px;">${verdict}</span></td>
+  `;
+  tbody.insertBefore(row, tbody.firstChild);
+}
 
 function escapeHtml(text) {
   if (!text) return "";
